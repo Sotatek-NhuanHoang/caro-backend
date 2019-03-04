@@ -4,8 +4,7 @@ services:
     image: rabbitmq:3.7-alpine
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      RABBITMQ_DEFAULT_VHOST: my_vhost
     ports:
       - 5672:5672
 
