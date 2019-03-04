@@ -10,11 +10,12 @@ import userReducer from './user';
 
 
 const reducers = combineReducers({
-    room: persistReducer({
-        key: 'room',
+    room: roomReducer,
+    user: persistReducer({
+        key: 'user',
         storage: storage,
-    }, roomReducer),
-    user: userReducer,
+        whitelist: ['currentUser'],
+    }, userReducer),
 });
 
 

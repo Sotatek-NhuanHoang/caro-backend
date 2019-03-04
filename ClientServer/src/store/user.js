@@ -34,9 +34,22 @@ export const user_LOGIN = ({ accessToken, facebookId }) => async (dispatch) => {
 
     try {
         const response = await UserApi.login({ accessToken: accessToken, facebookId: facebookId, });
-        console.log(response);
-    } catch (error) {
         
+        // Update current user
+        dispatch(user_UPDATE_STATE({
+            isLogging: false,
+            currentUser: {
+                id: response._id,
+                facebookId: response.facebookId,
+                username: response.username,
+                token: response.token,
+            },
+        }));
+    } catch (error) {
+        dispatch(user_UPDATE_STATE({
+            isLogging: false,
+            loginError: error.message,
+        }));
     }
 };
 

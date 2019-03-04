@@ -7,6 +7,7 @@
     "caro-api": "./src/api",
     "caro-config": "./src/config",
     "caro-screens": "./src/screens",
+    "caro-service": "./src/service",
     "caro-store": "./src/store",
     "caro-styles": "./src/styles",
     "immutable": "^4.0.0-rc.12",

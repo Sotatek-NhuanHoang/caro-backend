@@ -8,6 +8,18 @@ import './LoginScreen.scss';
 
 class LoginScreen extends PureComponent {
 
+    componentWillMount() {
+        if (this.props.currentUserId) {
+            this.props.history.push('/rooms');
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.currentUserId && this.props.currentUserId) {
+            this.props.history.push('/rooms');
+        }
+    }
+
     onLoginButtonPressed() {
         const FB = window.FB;
         FB.login(() => {
@@ -40,7 +52,7 @@ class LoginScreen extends PureComponent {
 
 
 const mapStateToProps = ({ user }) => ({
-
+    currentUserId: user.currentUser.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
