@@ -10,6 +10,7 @@ Seneca()
     .quiet()
     .use('seneca-amqp-transport')
     .use('services/createUser')
+    .use('services/getUsersById')
     .listen({
         type: 'amqp',
         pin: `repo:${RepositoryName.USER_REPOSITORY},service:*`,

@@ -1,5 +1,5 @@
 {
-  "name": "user-repository",
+  "name": "api-gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "caro-database": "./database",
+    "bluebird": "^3.5.3",
+    "caro-repository-client": "./RepositoryClient",
     "caro-shared-resource": "../SharedResource",
     "dotenv": "^6.2.0",
-    "mongoose": "^5.4.17",
+    "fastify": "^2.0.0",
     "seneca": "^3.8.4",
     "seneca-amqp-transport": "^2.2.0"
   }
