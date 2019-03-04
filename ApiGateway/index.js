@@ -21,6 +21,9 @@ fastify.register(require('fastify-helmet'));
 // X Xss protection
 fastify.use(require('x-xss-protection')());
 
+// Form body
+fastify.register(require('fastify-formbody'));
+
 
 
 /**

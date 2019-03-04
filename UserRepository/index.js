@@ -11,6 +11,7 @@ Seneca()
     .use('seneca-amqp-transport')
     .use('services/createUser')
     .use('services/getUsersById')
+    .use('services/getUserByFacebookId')
     .listen({
         type: 'amqp',
         pin: `repo:${RepositoryName.USER_REPOSITORY},service:*`,
