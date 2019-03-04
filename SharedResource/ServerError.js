@@ -1,4 +1,5 @@
 module.exports = {
     UNAUTHENTICATED: 'UNAUTHENTICATED',
     USER_NOT_FOUND: 'USER_NOT_FOUND',
+    ROOM_FULL: 'ROOM_FULL',
 };
