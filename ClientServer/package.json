@@ -3,9 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "caro-screens": "./src/screens",
+    "caro-store": "./src/store",
+    "caro-styles": "./src/styles",
+    "node-sass": "^4.11.0",
+    "normalize.css": "^8.0.1",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.5",
+    "spectre.css": "^0.5.8"
   },
   "scripts": {
     "start": "react-scripts start",

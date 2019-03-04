@@ -1,0 +1,19 @@
+@import './flexbox/flexbox.scss';
+
+
+
+body {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+#root {
+    flex: 1;
+    display: flex;
+}
+
+#router {
+    flex: 1;
+    display: flex;
+}

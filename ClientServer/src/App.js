@@ -1,28 +1,25 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Router from './Router';
+
+// Reset css
+import 'normalize.css';
+
+// Spectre css framework
+import 'spectre.css/dist/spectre.min.css';
+import 'spectre.css/dist/spectre-exp.min.css';
+import 'spectre.css/dist/spectre-icons.min.css';
+
+// Caro style
+import 'caro-styles/index.scss';
+
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <Router />
+        );
+    }
 }
+
 
 export default App;
