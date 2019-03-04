@@ -1,0 +1,17 @@
+{
+  "name": "userrepository",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "mongoose": "^5.4.17",
+    "seneca": "^3.8.4",
+    "caro-database": "./database"
+  }
+}
