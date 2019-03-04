@@ -1,3 +1,52 @@
 #room-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 3rem;
 
+    .room-status-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0px;
+        background-color: #FFFFFF;
+        padding: 0.3rem 0 0.3rem 0;
+        border-bottom: .05rem solid #f1f3f5;
+    }
+
+    .add-button {
+        box-sizing: border-box;
+        transition: background-color 0.1s ease-out;
+        border-radius: 3.01px;
+        border-style: solid;
+        border-width: 1px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 14px;
+        font-variant: normal;
+        font-weight: 400;
+        background-image: none;
+        background-color: rgba(9, 30, 66, 0.08);
+        border-color: transparent;
+        color: #344563;
+        text-decoration: none;
+        display: inline-block;
+        height: 2.14285714em;
+        line-height: 1.42857143em;
+        margin: 0;
+        padding: 4px 10px;
+        vertical-align: baseline;
+        white-space: nowrap;
+    }
+
+    .divider {
+        margin-bottom: 0px;
+    }
+
+    .table tr:hover {
+        cursor: pointer;
+    }
 }
