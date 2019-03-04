@@ -2,7 +2,12 @@ import BaseApi from './BaseApi';
 
 
 const UserApi = {
-    login: () => {},
+    login: async ({ accessToken, facebookId }) => {
+        return BaseApi.POST('/users/facebook/login', {
+            accessToken: accessToken,
+            facebookId: facebookId,
+        });
+    },
 };
 
 

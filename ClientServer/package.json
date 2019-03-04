@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apisauce": "^1.0.2",
     "caro-api": "./src/api",
     "caro-config": "./src/config",
     "caro-screens": "./src/screens",

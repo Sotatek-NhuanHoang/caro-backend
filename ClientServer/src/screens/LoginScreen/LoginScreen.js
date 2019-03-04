@@ -1,15 +1,25 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
+
+import { user_LOGIN } from 'caro-store/user';
 
 import './LoginScreen.scss';
 
 
-export default class LoginScreen extends PureComponent {
+class LoginScreen extends PureComponent {
 
     onLoginButtonPressed() {
         const FB = window.FB;
         FB.login(() => {
             FB.getLoginStatus((response) => {
-                console.log(response);
+                if (response.status !== 'connected') {
+                    return;
+                }
+
+                const { authResponse } = response;
+                const { accessToken, userID: facebookId } = authResponse;
+
+                this.props._login(accessToken, facebookId);
             });
         });
     }
@@ -27,3 +37,19 @@ export default class LoginScreen extends PureComponent {
         );
     }
 }
+
+
+const mapStateToProps = ({ user }) => ({
+
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    _login: (accessToken, facebookId) => {
+        return dispatch(user_LOGIN({
+            accessToken: accessToken,
+            facebookId: facebookId,
+        }));
+    },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

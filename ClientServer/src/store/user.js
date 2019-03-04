@@ -2,6 +2,7 @@ import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
 // import { createSelector } from 'reselect';
 // import _ from 'lodash';
+import UserApi from 'caro-api/UserApi';
 
 
 
@@ -13,6 +14,8 @@ import { fromJS } from 'immutable';
 const defaultState = {
     otherUsers: {},
     currentUser: {},
+    isLogging: false,
+    loginError: null,
 };
 
 
@@ -24,6 +27,18 @@ const defaultState = {
  */
 
 export const user_UPDATE_STATE = createAction('user_UPDATE_STATE');
+
+export const user_LOGIN = ({ accessToken, facebookId }) => async (dispatch) => {
+    // Loading
+    dispatch(user_UPDATE_STATE({ isLogging: true, loginError: null, }));
+
+    try {
+        const response = await UserApi.login({ accessToken: accessToken, facebookId: facebookId, });
+        console.log(response);
+    } catch (error) {
+        
+    }
+};
 
 
 

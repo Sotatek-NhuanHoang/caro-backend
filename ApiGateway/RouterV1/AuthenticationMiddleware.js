@@ -16,7 +16,7 @@ module.exports = async (req, reply, next) => {
     }
 
 
-    jwt.verify(token, process.env.SERVER_SECRET_KEY, { algorithms: process.env.SERVER_SECRET_ALGORITHM, }, async (err, decoded) => {
+    jwt.verify(token, process.env.SERVER_SECRET_KEY, { algorithms: [process.env.SERVER_SECRET_ALGORITHM], }, async (err, decoded) => {
         if (err) {
             reply.code(401)
                 .send({

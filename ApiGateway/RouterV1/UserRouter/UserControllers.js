@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const jwt = require('jsonwebtoken');
 const UserClient = require('caro-repository-client/UserClient');
 
 
@@ -20,7 +21,11 @@ const UserControllers = {
                 });
             }
 
-            reply.status(200).send(user);
+            const token = jwt.sign({ foo: 'bar' }, process.env.SERVER_SECRET_KEY, { algorithm: process.env.SERVER_SECRET_ALGORITHM, });
+            reply.status(200).send({
+                ...user,
+                token: token,
+            });
         } catch (error) {
             reply.status(500)
                 .send({
