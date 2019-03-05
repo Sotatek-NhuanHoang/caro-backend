@@ -1,4 +1,4 @@
-const RepositoryName = require('caro-shared-resource/RepositoryName');
+const RepositoryName = require('../RepositoryName');
 
 const UserClient = require('./createClient')(RepositoryName.USER_REPOSITORY);
 

@@ -10,7 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.3",
+    "caro-socket": "./socket",
+    "caro-shared-resource": "../SharedResource",
+    "caro-repository-client": "../SharedResource/RepositoryClient",
     "dotenv": "^6.2.0",
+    "jsonwebtoken": "^8.5.0",
     "seneca": "^3.8.4",
     "seneca-amqp-transport": "^2.2.0",
     "socket.io": "^2.2.0",

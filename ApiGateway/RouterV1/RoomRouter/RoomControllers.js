@@ -2,6 +2,8 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const RoomClient = require('caro-repository-client/RoomClient');
 const UserClient = require('caro-repository-client/UserClient');
+const SocketClient = require('caro-repository-client/SocketClient');
+const SocketServer = require('caro-shared-resource/SocketServer');
 
 
 const RoomControllers = {
@@ -9,6 +11,11 @@ const RoomControllers = {
         try {
             const newRoom = await RoomClient.call('createRoom', { userId: req.user._id });
             reply.status(200).send(newRoom);
+
+            SocketClient.call('broadcast', {
+                eventName: SocketServer.room_ADD_NEW,
+                params: newRoom,
+            });
         } catch (error) {
             reply.status(500).send({ message: error.message });
         }

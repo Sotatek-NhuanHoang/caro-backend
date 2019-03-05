@@ -1,28 +1,27 @@
 // Load env
 require('dotenv').config();
 
-const app = require('http').createServer(handler);
-const io = require('socket.io')(app);
-const socketMiddleware = require('socketio-wildcard');
-const eventHandler = require('./eventHandler');
+const Seneca = require('seneca');
+const RepositoryName = require('caro-shared-resource/RepositoryName');
 
 
-function handler (req, res) {
-    res.writeHead(200);
-    res.end('OK');
-}
 
-app.listen(process.env.SERVER_PORT);
-
-io.use(socketMiddleware());
-
-io.on('connection',  (socket) => {
-    socket.on('*', ({ data }) => {
-        const [ eventName, params ] = data;
-        eventHandler(io, socket, eventName, params);
+// Load services
+Seneca()
+    .quiet()
+    .use('seneca-amqp-transport')
+    .use('services/sendUserId')
+    .use('services/broadcast')
+    .listen({
+        type: 'amqp',
+        pin: `repo:${RepositoryName.SOCKET_SERVER},service:*`,
+        hostname: process.env.AMQP_HOSTNAME,
+        port: process.env.AMQP_PORT,
+        vhost: process.env.AMQP_VHOST,
+        username: process.env.AMQP_USERNAME,
+        password: process.env.AMQP_PASSWORD,
+    })
+    .ready(function() {
+        console.log('--- Service ready:', this.id);
+        console.log('--- Plugins:', Object.keys(this.list_plugins()));
     });
-
-    socket.emit('nhuan', 'meo meo')
-});
-
-

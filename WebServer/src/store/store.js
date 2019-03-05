@@ -46,4 +46,7 @@ const store = createStore(
 
 export const persistor = persistStore(store);
 
+export const dispatch = store.dispatch;
+export const getState = store.getState;
+
 export default store;

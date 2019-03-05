@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.3",
-    "caro-repository-client": "./RepositoryClient",
+    "caro-repository-client": "../SharedResource/RepositoryClient",
     "caro-router-v1": "./RouterV1",
     "caro-shared-resource": "../SharedResource",
     "dotenv": "^6.2.0",
