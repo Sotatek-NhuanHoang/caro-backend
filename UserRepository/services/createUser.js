@@ -5,7 +5,7 @@ const UserModel = require('caro-database/UserModel');
 module.exports = function() {
     this.add(`repo:${RepositoryName.USER_REPOSITORY},service:createUser`, async (msg, done) => {
         try {
-            const { username, facebookId } = msg;
+            const { username, facebookId, avatar } = msg;
             
             let existedUser = await UserModel.findOne({ facebookId: facebookId, });
 
@@ -13,10 +13,9 @@ module.exports = function() {
                 existedUser = await UserModel.create({
                     facebookId: facebookId,
                     username: username,
+                    avatar: avatar,
                 });
             }
-
-            console.log(existedUser)
 
             done(null, existedUser);
         } catch (error) {
