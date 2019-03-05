@@ -1,0 +1,29 @@
+@import "~noty/src/noty.scss";
+@import "~noty/src/themes/sunset.scss";
+
+@import './flexbox/flexbox.scss';
+@import './components/spinner.scss';
+
+html {
+    font-size: 18px;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+p {
+    margin: 0 0 0.1rem;
+}
+
+#root {
+    flex: 1;
+    display: flex;
+}
+
+#router {
+    flex: 1;
+    display: flex;
+}

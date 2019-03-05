@@ -13,6 +13,7 @@
     "dotenv": "^6.2.0",
     "seneca": "^3.8.4",
     "seneca-amqp-transport": "^2.2.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "socketio-wildcard": "^2.0.0"
   }
 }

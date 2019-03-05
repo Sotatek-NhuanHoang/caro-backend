@@ -1,0 +1,24 @@
+#match-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+
+    > .user-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2rem 0;
+    }
+
+    .exit-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+    }
+    .exit-button:hover {
+        cursor: pointer;
+    }
+}
