@@ -1,13 +1,14 @@
 const AuthenticationMiddleware = require('../AuthenticationMiddleware');
-const UserControllers = require('./UserControllers');
+const RoomControllers = require('./RoomControllers');
 
 
 module.exports = async function routes (fastify, options, next) {
-    // User login by facebook
+    // Create new room
     fastify.route({
         method: 'POST',
-        url: '/facebook/login',
-        handler: UserControllers.facebookLogin,
+        url: '/',
+        preValidation: AuthenticationMiddleware,
+        handler: RoomControllers.createRoom,
     });
 
     next();

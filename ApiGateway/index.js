@@ -33,6 +33,8 @@ fastify.register(require('fastify-formbody'));
 // User Router /users
 fastify.register(require('caro-router-v1/UserRouter'), { prefix: '/v1/users' });
 
+// Room Router /rooms
+fastify.register(require('caro-router-v1/RoomRouter'), { prefix: '/v1/rooms' });
 
 
 /**

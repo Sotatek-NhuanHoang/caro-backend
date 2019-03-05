@@ -3,8 +3,8 @@ const UserClient = require('caro-repository-client/UserClient');
 const ServerError = require('caro-shared-resource/ServerError');
 
 
-module.exports = async (req, reply, next) => {
-    const authenticationHeader = req.headers['Authorization'] || '';
+module.exports = (req, reply, next) => {
+    const authenticationHeader = req.headers['authorization'] || '';
     const [bearer, token] = authenticationHeader.split(' ');
 
     if (!authenticationHeader || bearer !== 'Bearer') {
@@ -14,7 +14,6 @@ module.exports = async (req, reply, next) => {
             });
         return;
     }
-
 
     jwt.verify(token, process.env.SERVER_SECRET_KEY, { algorithms: [process.env.SERVER_SECRET_ALGORITHM], }, async (err, decoded) => {
         if (err) {

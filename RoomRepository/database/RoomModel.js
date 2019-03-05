@@ -8,6 +8,7 @@ const RoomSchema = new Schema({
     competitorUserId: ObjectId,
     status: String,
     firstMoveUser: ObjectId,
+    updated: Date,
 });
 
 

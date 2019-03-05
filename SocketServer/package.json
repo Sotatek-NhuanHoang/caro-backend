@@ -1,5 +1,5 @@
 {
-  "name": "score-repository",
+  "name": "socket-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,11 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "caro-database": "./database",
-    "caro-shared-resource": "../SharedResource",
     "dotenv": "^6.2.0",
-    "mongoose": "^5.4.17",
     "seneca": "^3.8.4",
-    "seneca-amqp-transport": "^2.2.0"
+    "seneca-amqp-transport": "^2.2.0",
+    "socket.io": "^2.2.0"
   }
 }

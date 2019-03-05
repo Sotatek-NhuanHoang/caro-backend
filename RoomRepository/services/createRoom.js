@@ -12,6 +12,7 @@ module.exports = function() {
                 competitorUserId: null,
                 status: RoomStatus.WAITING,
                 firstMoveUser: userId,
+                updated: Date.now(),
             });
             done(null, newRoom);
         } catch (error) {

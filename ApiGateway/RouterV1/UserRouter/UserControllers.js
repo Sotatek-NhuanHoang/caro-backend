@@ -30,7 +30,7 @@ const UserControllers = {
                 });
             }
 
-            const token = jwt.sign({ foo: 'bar' }, process.env.SERVER_SECRET_KEY, { algorithm: process.env.SERVER_SECRET_ALGORITHM, });
+            const token = jwt.sign({ userId: user._id }, process.env.SERVER_SECRET_KEY, { algorithm: process.env.SERVER_SECRET_ALGORITHM, });
             reply.status(200).send({
                 ...user,
                 token: token,
