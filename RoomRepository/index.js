@@ -12,6 +12,8 @@ Seneca()
     .use('services/createRoom')
     .use('services/joinRoom')
     .use('services/leaveRoom')
+    .use('services/getAvailableRoomsByPage')
+    .use('services/getTotalAvailableRooms')
     .listen({
         type: 'amqp',
         pin: `repo:${RepositoryName.ROOM_REPOSITORY},service:*`,

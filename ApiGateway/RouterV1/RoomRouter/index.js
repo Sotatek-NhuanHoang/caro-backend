@@ -11,5 +11,13 @@ module.exports = async function routes (fastify, options, next) {
         handler: RoomControllers.createRoom,
     });
 
+    // Get rooms
+    fastify.route({
+        method: 'GET',
+        url: '/',
+        preValidation: AuthenticationMiddleware,
+        handler: RoomControllers.getRooms,
+    });
+
     next();
 };
