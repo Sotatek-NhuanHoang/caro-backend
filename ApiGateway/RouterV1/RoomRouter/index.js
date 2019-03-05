@@ -14,7 +14,7 @@ module.exports = async function routes (fastify, options, next) {
     // Get rooms
     fastify.route({
         method: 'GET',
-        url: '/',
+        url: '/available',
         preValidation: AuthenticationMiddleware,
         handler: RoomControllers.getRooms,
     });
