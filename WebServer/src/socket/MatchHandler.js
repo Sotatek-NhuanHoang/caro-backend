@@ -1,13 +1,13 @@
 import SocketServerEvents from 'caro-shared-resource/SocketServerEvents';
 import { dispatch, getState } from 'caro-store';
-import { match_UPDATE_STATE } from 'caro-store/match';
+import { match_UPDATE_STATE, checkWinningMatchFromIndex } from 'caro-store/match';
 import Config from 'caro-config';
 
 
 const RoomHandler = (eventName, params) => {
     switch (eventName) {
         case SocketServerEvents.match_STROKE: {
-            const { roomId, row, column } = params;
+            const { roomId, row, column, competitorUserId } = params;
             const { room, match, user } = getState();
             
             if (roomId !== room.currentRoomId) {
@@ -25,6 +25,16 @@ const RoomHandler = (eventName, params) => {
                     [competitorSquareIndex]: competitorSquareType,
                 },
             }));
+
+            const { match: nextMatch } = getState();
+            const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
+
+            if (winningSquares) {
+                dispatch(match_UPDATE_STATE({
+                    winningSquares: winningSquares,
+                    winnerId: competitorUserId,
+                }));
+            }
             break;
         }
 

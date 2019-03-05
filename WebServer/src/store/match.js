@@ -229,7 +229,18 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
         row: row,
         column: column,
         competitorUserId: competitorUserId,
+        userId: currentUser.id,
     });
+
+    const { match: nextMatch } = getState();
+    const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
+
+    if (winningSquares) {
+        dispatch(match_UPDATE_STATE({
+            winningSquares: winningSquares,
+            winnerId: currentUser.id,
+        }));
+    }
 };
 
 
