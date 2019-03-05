@@ -10,11 +10,44 @@ const RoomControllers = {
     createRoom: async (req, reply) => {
         try {
             const newRoom = await RoomClient.call('createRoom', { userId: req.user._id });
+            const creatorUser = await UserClient.call('getUserById', { userId: req.user._id, });
+
             reply.status(200).send(newRoom);
 
             SocketClient.call('broadcast', {
                 eventName: SocketServer.room_ADD_NEW,
-                params: newRoom,
+                params: {
+                    room: newRoom,
+                    creatorUser: creatorUser,
+                },
+            });
+        } catch (error) {
+            reply.status(500).send({ message: error.message });
+        }
+    },
+
+    joinRoom: async (req, reply) => {
+        try {
+            const { roomId } = req.body;
+
+            const joinedRoom = await RoomClient.call('joinRoom', { roomId: roomId, userId: req.user._id });
+            const [creatorUser, joinedUser] = await Promise.all([
+                UserClient.call('getUserById', { userId: joinedRoom.creatorUserId, }),
+                UserClient.call('getUserById', { userId: req.user._id, }),
+            ]);
+
+            reply.status(200).send({
+                room: joinedRoom,
+                creatorUser: creatorUser,
+            });
+
+            SocketClient.call('broadcast', {
+                eventName: SocketServer.room_JOIN,
+                userId: joinedRoom.creatorUserId,
+                params: {
+                    room: joinedRoom,
+                    competitorUser: joinedUser,
+                },
             });
         } catch (error) {
             reply.status(500).send({ message: error.message });

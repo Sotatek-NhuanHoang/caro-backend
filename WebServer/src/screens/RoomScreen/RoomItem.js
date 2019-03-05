@@ -2,9 +2,19 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import CreatorName from './CreatorName';
-import { roomSelector } from 'caro-store/room';
+import { roomSelector, room_JOIN_ROOM } from 'caro-store/room';
 
 class RoomItem extends PureComponent {
+
+    onRoomItemClicked = () => {
+        const { room } = this.props;
+
+        if (!room) {
+            return null;
+        }
+
+        this.props._joinRoom(room.id);
+    }
 
     render() {
         const { room } = this.props;
@@ -14,7 +24,7 @@ class RoomItem extends PureComponent {
         }
 
         return (
-            <tr className="room-item">
+            <tr className="room-item" onClick={ this.onRoomItemClicked }>
                 <td>
                     <CreatorName userId={ room.creatorUserId } />
                 </td>
@@ -30,7 +40,9 @@ const mapStateToProps = ({ room }, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
- 
+    _joinRoom: (roomId) => {
+        return dispatch(room_JOIN_ROOM(roomId));
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomItem);

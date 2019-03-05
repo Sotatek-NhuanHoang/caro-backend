@@ -19,6 +19,11 @@ const defaultState = {
     limit: 20,
     isGettingRooms: false,
     getRoomsError: null,
+
+    creatingRoom: false,
+    createRoomError: null,
+
+    currentRoomId: null,
 };
 
 
@@ -30,6 +35,7 @@ const defaultState = {
  */
 
 export const room_UPDATE_STATE = createAction('room_UPDATE_STATE');
+
 
 export const room_GET_ROOMS = (shouldRefresh = false) => async (dispatch, getState) => {
     const { room } = getState();
@@ -89,6 +95,72 @@ export const room_GET_ROOMS = (shouldRefresh = false) => async (dispatch, getSta
         }));
     }
 };
+
+
+export const room_NEW_ROOM = () => async (dispatch) => {
+    dispatch(room_UPDATE_STATE({
+        creatingRoom: true,
+        createRoomError: null,
+    }));
+
+    try {
+       const newRoom = await RoomApi.createRoom();
+
+       dispatch(room_UPDATE_STATE({
+            rooms: {
+                [newRoom._id]: {
+                    id: newRoom._id,
+                    ...newRoom
+                }
+            },
+            currentRoomId: newRoom._id,
+            creatingRoom: false,
+        }));
+    } catch (error) {
+        dispatch(room_UPDATE_STATE({
+            creatingRoom: false,
+            createRoomError: error.message,
+        }));
+    }
+};
+
+export const room_JOIN_ROOM = (roomId) => async (dispatch) => {
+    dispatch(room_UPDATE_STATE({
+        creatingRoom: true,
+        createRoomError: null,
+    }));
+
+    try {
+        const response = await RoomApi.joinRoom(roomId);
+        const { room: joinedRoom, creatorUser } = response;
+
+        dispatch(user_UPDATE_STATE({
+            otherUsers: {
+                [creatorUser._id]: {
+                    id: creatorUser._id,
+                    ...creatorUser,
+                }
+            }
+        }));
+        dispatch(room_UPDATE_STATE({
+            rooms: {
+                [joinedRoom._id]: {
+                    id: joinedRoom._id,
+                    ...joinedRoom
+                }
+            },
+            currentRoomId: joinedRoom._id,
+            creatingRoom: false,
+        }));
+    } catch (error) {
+        dispatch(room_UPDATE_STATE({
+            creatingRoom: false,
+            createRoomError: error.message,
+        }));
+    }
+};
+
+
 
 
 /**

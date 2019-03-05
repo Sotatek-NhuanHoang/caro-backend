@@ -56,7 +56,26 @@ const BaseApi = {
         }
     },
 
-    PUT: () => {},
+    PUT: async (endPoint, params = {}) => {
+        const { user } = store.getState();
+        const token = _.get(user, ['currentUser', 'token']);
+
+        try {
+            const response = await Api.put(endPoint, params, {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(response.data.message);
+            }
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
 
     DELETE: () => {},
 };
