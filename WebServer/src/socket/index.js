@@ -2,10 +2,11 @@ import io from 'socket.io-client';
 import socketWildcard from 'socketio-wildcard';
 import Config from 'caro-config';
 import _ from 'lodash';
-import SocketClient from 'caro-shared-resource/SocketClient';
+import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 
 import combineHandlers from './combineHandlers';
 import RoomHandler from './RoomHandler';
+import MatchHandler from './MatchHandler';
 import { getState } from 'caro-store';
 
 
@@ -14,6 +15,7 @@ socketWildcard(io.Manager)(socket);
 
 const eventHandler = combineHandlers([
     RoomHandler,
+    MatchHandler,
 ]);
 
 
@@ -22,7 +24,7 @@ socket.on('connect', function () {
     const token = _.get(user, ['currentUser', 'token']);
 
     if (token) {
-        socket.emit(SocketClient.user_AUTHENTICATION, { token: token, });
+        socket.emit(SocketClientEvents.user_AUTHENTICATION, { token: token, });
     }
 
     socket.on('*', ({ data }) => {

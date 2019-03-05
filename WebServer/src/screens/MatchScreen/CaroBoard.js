@@ -14,11 +14,11 @@ class CaroBoard extends PureComponent {
         return (
             <div id="caro-board">
                 {/* Render row */}
-                {_.map(new Array(Config.CARO_BOARD_ROW), () => (
-                    <div className="caro-board-row">
+                {_.map(new Array(Config.CARO_BOARD_ROW), (row, rowIndex) => (
+                    <div className="caro-board-row" key={ rowIndex }>
                         {/* Render column */}
-                        {_.map(new Array(Config.CARO_BOARD_COLUMN), () => (
-                            <CaroBoardSquare />
+                        {_.map(new Array(Config.CARO_BOARD_COLUMN), (col, columnIndex) => (
+                            <CaroBoardSquare key={ columnIndex } row={ rowIndex } column={ columnIndex } />
                         ))}
                     </div>
                 ))}

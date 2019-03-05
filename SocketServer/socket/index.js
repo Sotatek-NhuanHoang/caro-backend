@@ -5,6 +5,7 @@ const socketMiddleware = require('socketio-wildcard');
 const combineHandlers = require('./combineHandlers');
 const RoomHandler = require('./RoomHandler');
 const UserHandler = require('./UserHandler');
+const MatchHandler = require('./MatchHandler');
 
 
 function handler (req, res) {
@@ -17,6 +18,7 @@ app.listen(process.env.SERVER_PORT);
 const eventHandler = combineHandlers([
     RoomHandler,
     UserHandler,
+    MatchHandler,
 ]);
 
 io.use(socketMiddleware());

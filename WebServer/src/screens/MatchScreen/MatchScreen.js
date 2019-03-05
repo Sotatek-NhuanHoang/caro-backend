@@ -11,6 +11,12 @@ import './MatchScreen.scss';
 
 class MatchScreen extends PureComponent {
 
+    componentWillMount() {
+        if (!this.props.room) {
+            this.props.history.push('/rooms');
+        }
+    }
+
     render() {
         const { room, currentUser } = this.props;
 

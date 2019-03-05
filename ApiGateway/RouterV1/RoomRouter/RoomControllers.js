@@ -3,7 +3,7 @@ const _ = require('lodash');
 const RoomClient = require('caro-repository-client/RoomClient');
 const UserClient = require('caro-repository-client/UserClient');
 const SocketClient = require('caro-repository-client/SocketClient');
-const SocketServer = require('caro-shared-resource/SocketServer');
+const SocketServerEvents = require('caro-shared-resource/SocketServerEvents');
 
 
 const RoomControllers = {
@@ -15,7 +15,7 @@ const RoomControllers = {
             reply.status(200).send(newRoom);
 
             SocketClient.call('broadcast', {
-                eventName: SocketServer.room_ADD_NEW,
+                eventName: SocketServerEvents.room_ADD_NEW,
                 params: {
                     room: newRoom,
                     creatorUser: creatorUser,
@@ -41,8 +41,8 @@ const RoomControllers = {
                 creatorUser: creatorUser,
             });
 
-            SocketClient.call('broadcast', {
-                eventName: SocketServer.room_JOIN,
+            SocketClient.call('sendUserId', {
+                eventName: SocketServerEvents.room_JOIN,
                 userId: joinedRoom.creatorUserId,
                 params: {
                     room: joinedRoom,

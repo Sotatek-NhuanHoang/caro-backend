@@ -8,6 +8,7 @@ import storage from 'redux-persist/lib/storage';
 import globalReducer from './user';
 import roomReducer from './room';
 import userReducer from './user';
+import matchReducer from './match';
 
 
 const reducers = combineReducers({
@@ -18,6 +19,7 @@ const reducers = combineReducers({
         storage: storage,
         whitelist: ['currentUser'],
     }, userReducer),
+    match: matchReducer,
 });
 
 

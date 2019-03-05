@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
-const SocketClient = require('caro-shared-resource/SocketClient');
+const SocketClientEvents = require('caro-shared-resource/SocketClientEvents');
 const UserClient = require('caro-repository-client/UserClient');
 
 
 const UserHandler = (io, socket, eventName, params) => {
     switch (eventName) {
-        case SocketClient.user_AUTHENTICATION:
+        case SocketClientEvents.user_AUTHENTICATION: {
             const { token } = params;
 
             jwt.verify(token, process.env.SERVER_SECRET_KEY, { algorithms: [process.env.SERVER_SECRET_ALGORITHM], }, async (err, decoded) => {
@@ -23,6 +23,7 @@ const UserHandler = (io, socket, eventName, params) => {
                 socket.join(userId);
             });
             break;
+        }
     }
 };
 
