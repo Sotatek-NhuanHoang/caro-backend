@@ -16,6 +16,10 @@ import 'spectre.css/dist/spectre-icons.min.css';
 // Caro style
 import 'caro-styles/index.scss';
 
+// React confirm alert
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+
 // Run socket
 import 'caro-socket';
 

@@ -1,4 +1,5 @@
 import Noty from 'noty';
+import { confirmAlert } from 'react-confirm-alert';
 
 
 const alertOptions = {
@@ -14,4 +15,22 @@ export const showError = (msg) => {
         text: msg,
         ...alertOptions
     }).show();
+};
+
+
+export const showConfirmAlert = ({ title, message, confirmText = 'Yes', onConfirm, cancelText = 'No', onCancel}) => {
+    confirmAlert({
+        title: title,
+        message: message,
+        buttons: [
+            {
+                label: confirmText,
+                onClick: onConfirm
+            },
+            {
+                label: cancelText,
+                onClick: onCancel
+            }
+        ],
+    });
 };

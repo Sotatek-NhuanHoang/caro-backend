@@ -20,6 +20,7 @@
     "normalize.css": "^8.0.1",
     "noty": "^3.2.0-beta",
     "react": "^16.8.3",
+    "react-confirm-alert": "^2.3.0",
     "react-dom": "^16.8.3",
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",
