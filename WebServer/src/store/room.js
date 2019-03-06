@@ -41,6 +41,9 @@ const defaultState = {
 
 export const room_UPDATE_STATE = createAction('room_UPDATE_STATE');
 
+export const room_UPDATE_ONE = createAction('room_UPDATE_ONE');
+
+export const room_REMOVE = createAction('room_REMOVE');
 
 export const room_GET_ROOMS = (shouldRefresh = false) => async (dispatch, getState) => {
     const { room } = getState();
@@ -188,6 +191,7 @@ export const room_OUT_ROOM = () => (dispatch, getState) => {
 
     socket.emit(SocketClientEvents.room_EXIT, {
         roomId: currentRoomId,
+        userId: currentUser.id,
         competitorUserId: competitorUserId,
     });
 };
@@ -206,6 +210,13 @@ export const reducer = handleActions({
             .mergeDeep(payload)
             .toJS();
     },
+
+    room_REMOVE: (state, { payload }) => {
+        const { roomId } = payload;
+        return fromJS(state)
+            .removeIn(['rooms', roomId])
+            .toJS();
+    }
 }, defaultState);
 
 

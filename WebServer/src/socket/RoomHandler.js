@@ -1,13 +1,13 @@
 import SocketServerEvents from 'caro-shared-resource/SocketServerEvents';
 import { dispatch, getState } from 'caro-store';
-import { room_UPDATE_STATE } from 'caro-store/room';
+import { room_UPDATE_STATE, room_REMOVE } from 'caro-store/room';
 import { user_UPDATE_STATE } from 'caro-store/user';
 import { match_RESET } from 'caro-store/match';
 
 
 const RoomHandler = (eventName, params) => {
     switch (eventName) {
-        case SocketServerEvents.room_ADD_NEW:
+        case SocketServerEvents.room_ADD_NEW: {
             dispatch(user_UPDATE_STATE({
                 otherUsers: {
                     [params.creatorUser._id]: {
@@ -25,6 +25,13 @@ const RoomHandler = (eventName, params) => {
                 },
             }));
             break;
+        }
+        
+        case SocketServerEvents.room_REMOVE: {
+            const { roomId } = params;
+            dispatch(room_REMOVE({ roomId: roomId, }));
+            break;
+        }
         
         case SocketServerEvents.room_JOIN: {
             dispatch(user_UPDATE_STATE({

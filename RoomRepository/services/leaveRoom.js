@@ -9,6 +9,8 @@ module.exports = function() {
             const { roomId, userId } = msg;
             const room = await RoomModel.findOne({ _id: roomId, });
 
+            let isDeleted = false;
+
             if (room.competitorUserId) {
                 if (room.creatorUserId === userId) {
                     room.creatorUserId = room.competitorUserId;
@@ -19,10 +21,14 @@ module.exports = function() {
 
                 await room.save();
             } else {
+                isDeleted = true;
                 await RoomModel.deleteOne({ _id: roomId, });
             }
 
-            done(null);
+            done(null, {
+                room: room,
+                isDeleted: isDeleted,
+            });
         } catch (error) {
             done(error);
         }
