@@ -32,7 +32,7 @@ socket.on('connect', function () {
     socket.on('*', ({ data }) => {
         const [ eventName, params ] = data;
         eventHandler(eventName, params);
-        console.log('socket: ', eventName, params);
+        // console.log('socket: ', eventName, params);
     });
 });
 

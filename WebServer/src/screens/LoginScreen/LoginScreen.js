@@ -31,7 +31,6 @@ class LoginScreen extends PureComponent {
 
     onLoginButtonPressed() {
         const FB = window.FB;
-        console.log(window);
 
         FB.login(() => {
             FB.getLoginStatus((response) => {

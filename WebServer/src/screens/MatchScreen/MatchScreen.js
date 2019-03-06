@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { showConfirmAlert } from 'caro-service/AlertService';
+import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
 import { roomSelector, room_OUT_ROOM } from 'caro-store/room';
 import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
 import CaroBoard from './CaroBoard';
@@ -52,6 +53,14 @@ class MatchScreen extends PureComponent {
                     _exitRoom();
                 }, // Out room
             });
+        }
+
+        if (!prevProps.currentUserReadyNewGame && currentUserReadyNewGame) {
+            showSpinner();
+        }
+
+        if (prevProps.currentUserReadyNewGame && !currentUserReadyNewGame) {
+            hideSpinner();
         }
 
         if (
