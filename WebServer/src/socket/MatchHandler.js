@@ -20,7 +20,6 @@ const RoomHandler = (eventName, params) => {
             const competitorSquareType = currentUser.id === firstMoveUserId ? Config.SECOND_MOVE_SQUARE_TYPE : Config.FIRST_MOVE_SQUARE_TYPE;
 
             dispatch(match_UPDATE_STATE({
-                isCurentUserTurn: true,
                 squares: {
                     [competitorSquareIndex]: competitorSquareType,
                 },
@@ -33,6 +32,10 @@ const RoomHandler = (eventName, params) => {
                 dispatch(match_UPDATE_STATE({
                     winningSquares: winningSquares,
                     winnerId: competitorUserId,
+                }));
+            } else {
+                dispatch(match_UPDATE_STATE({
+                    isCurentUserTurn: true,
                 }));
             }
             break;

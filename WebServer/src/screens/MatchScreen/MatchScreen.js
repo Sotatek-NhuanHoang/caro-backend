@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { showConfirmAlert } from 'caro-service/AlertService';
 import { roomSelector } from 'caro-store/room';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
@@ -16,6 +17,22 @@ class MatchScreen extends PureComponent {
             this.props.history.push('/rooms');
         }
     }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.winnerId && this.props.winnerId) {
+            const didCurrentUserWin = (this.props.winnerId === this.props.currentUser.id);
+            const title = didCurrentUserWin ? 'You win' : 'You lose';
+
+            showConfirmAlert({
+                title: title,
+                message: 'Play new game?',
+                cancelText: 'Exit room',
+                onConfirm: () => {},
+                onCancel: () => {},
+            });
+        }
+    }
+
 
     render() {
         const { room, currentUser } = this.props;
@@ -47,9 +64,10 @@ class MatchScreen extends PureComponent {
 }
 
 
-const mapStateToProps = ({ room, user }) => ({
+const mapStateToProps = ({ room, user, match }) => ({
     room: roomSelector(room, room.currentRoomId),
     currentUser: user.currentUser,
+    winnerId: match.winnerId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
