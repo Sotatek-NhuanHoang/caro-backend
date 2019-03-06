@@ -5,6 +5,7 @@ import Config from 'caro-config';
 import _ from 'lodash';
 import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 import socket from 'caro-socket';
+import { showError } from 'caro-service/AlertService';
 
 
 
@@ -205,7 +206,13 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
     const { match, user, room } = getState();
     const { isCurentUserTurn, squares, firstMoveUserId } = match;
 
-    if (!isCurentUserTurn || !firstMoveUserId) {
+    if (!firstMoveUserId) {
+        showError('Waiting user ...');
+        return;
+    }
+
+    if (!isCurentUserTurn) {
+        showError('Not your turn!');
         return;
     }
 

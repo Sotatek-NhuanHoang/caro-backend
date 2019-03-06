@@ -52,7 +52,15 @@ const RoomControllers = {
 
             // Update room
             SocketClient.call('broadcast', {
+                eventName: SocketServerEvents.room_ADD_NEW,
+                params: {
+                    room: joinedRoom,
+                    creatorUser: creatorUser,
+                },
+            });
+            SocketClient.call('sendUserId', {
                 eventName: SocketServerEvents.room_JOIN,
+                userId: joinedRoom.creatorUserId,
                 params: {
                     room: joinedRoom,
                     competitorUser: joinedUser,

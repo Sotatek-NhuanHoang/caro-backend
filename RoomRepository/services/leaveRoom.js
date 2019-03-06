@@ -12,7 +12,7 @@ module.exports = function() {
             let isDeleted = false;
 
             if (room.competitorUserId) {
-                if (room.creatorUserId === userId) {
+                if (room.creatorUserId.toString() === userId) {
                     room.creatorUserId = room.competitorUserId;
                 }
 

@@ -75,7 +75,7 @@ const RoomHandler = (eventName, params) => {
                 },
             }));
             dispatch(match_RESET({
-                firstMoveUserId: currentUser.id,
+                firstMoveUserId: null,
             }));
             break;
         }
