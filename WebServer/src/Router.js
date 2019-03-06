@@ -9,7 +9,7 @@ import MatchScreen from 'caro-screens/MatchScreen/MatchScreen';
 export default class Router extends PureComponent {
     render() {
         return (
-            <BrowserRouter>
+            <BrowserRouter basename={ process.env.PUBLIC_URL }>
                 <div id="router">
                     <Route path="/" exact component={ LoginScreen } />
                     <Route path="/rooms" exact component={ RoomsScreen } />
