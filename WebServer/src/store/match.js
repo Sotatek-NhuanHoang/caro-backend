@@ -243,6 +243,10 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
             winningSquares: winningSquares,
             winnerId: currentUser.id,
         }));
+        socket.emit(SocketClientEvents.match_WIN, {
+            userId: currentUser.id,
+            competitorUserId: competitorUserId,
+        });
     }
 };
 

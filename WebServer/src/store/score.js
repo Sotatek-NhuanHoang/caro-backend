@@ -1,6 +1,6 @@
 import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
-// import { createSelector } from 'reselect';
+import { createSelector } from 'reselect';
 // import _ from 'lodash';
 
 
@@ -49,6 +49,13 @@ export const reducer = handleActions({
  * =====================================================
  */
 
+export const scoreSelector = createSelector(
+    (score, userId, competitorUserId) => ({ scores: score.scores, userId: userId, competitorUserId: competitorUserId }),
+    ({ scores, userId, competitorUserId }) => {
+        const scoreKey = userId + ',' + competitorUserId;
+        return scores[scoreKey] || 0;
+    }
+);
 
 
 

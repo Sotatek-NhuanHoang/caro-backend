@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { otherUserSelector } from 'caro-store/user';
+import UserScore from './UserScore';
 
 import './CompetitorUser.scss';
 
@@ -9,18 +10,16 @@ import './CompetitorUser.scss';
 class CompetitorUser extends PureComponent {
 
     render() {
-        const { user } = this.props;
+        const { competitorUser, userId } = this.props;
 
         return (
             <div id="current-user">
-                {user ? (
+                {competitorUser ? (
                     <Fragment>
-                        <img className="user-avatar" alt="avatar" src={ user.avatar } />
-                        <p className="user-name text-bold">{ user.username }</p>
+                        <img className="user-avatar" alt="avatar" src={ competitorUser.avatar } />
+                        <p className="user-name text-bold">{ competitorUser.username }</p>
                         
-                        <div className="chip">
-                            Wins: 12
-                        </div>
+                        <UserScore userId={ competitorUser.id } competitorUserId={ userId } />
 
                         {/* Toolbox */}
                         <div className="tool-box">
@@ -37,7 +36,7 @@ class CompetitorUser extends PureComponent {
 
 
 const mapStateToProps = ({ user }, ownProps) => ({
-    user: otherUserSelector(user, ownProps.userId),
+    competitorUser: otherUserSelector(user, ownProps.competitorUserId),
 });
 
 const mapDispatchToProps = (dispatch) => ({

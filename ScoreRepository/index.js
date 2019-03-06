@@ -10,7 +10,7 @@ Seneca()
     .quiet()
     .use('seneca-amqp-transport')
     .use('services/getScore')
-    .use('services/updateScore')
+    .use('services/increaseScore')
     .listen({
         type: 'amqp',
         pin: `repo:${RepositoryName.SCORE_REPOSITORY},service:*`,

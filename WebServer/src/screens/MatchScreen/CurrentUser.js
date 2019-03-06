@@ -1,22 +1,21 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import UserScore from './UserScore';
 import './CurrentUser.scss';
 
 
 class CurrentUser extends PureComponent {
 
     render() {
-        const { currentUser } = this.props;
+        const { currentUser, competitorUserId } = this.props;
 
         return (
             <div id="current-user">
                 <img className="user-avatar" alt="avatar" src={ currentUser.avatar } />
                 <p className="user-name text-bold">{ currentUser.username }</p>
                 
-                <div className="chip">
-                    Wins: 12
-                </div>
+                <UserScore userId={ currentUser.id } competitorUserId={ competitorUserId } />
 
                 {/* Toolbox */}
                 <div className="tool-box">

@@ -84,8 +84,8 @@ class MatchScreen extends PureComponent {
 
                 {/* Users info */}
                 <div className="user-container">
-                    <CompetitorUser userId={ competitorUserId } />
-                    <CurrentUser />
+                    <CompetitorUser userId={ currentUser.id } competitorUserId={ competitorUserId } />
+                    <CurrentUser competitorUserId={ competitorUserId } />
 
                     {/* Exit room button */}
                     <button className="exit-button" onClick={ this.onExitRoomButtonClicked }>
