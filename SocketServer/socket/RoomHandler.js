@@ -29,9 +29,6 @@ const RoomHandler = async (io, socket, eventName, params) => {
                         room: room,
                         creatorUser: creatorUser,
                     });
-                    io.emit(SocketServerEvents.room_UPDATE, {
-                        room: room,
-                    });
                 }
             } catch (error) {
                 

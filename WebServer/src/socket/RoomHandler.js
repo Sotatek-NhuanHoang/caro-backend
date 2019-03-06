@@ -1,6 +1,6 @@
 import SocketServerEvents from 'caro-shared-resource/SocketServerEvents';
 import { dispatch, getState } from 'caro-store';
-import { room_UPDATE_STATE, room_REMOVE } from 'caro-store/room';
+import { room_UPDATE_STATE, room_REMOVE, room_UPDATE_ONE } from 'caro-store/room';
 import { user_UPDATE_STATE } from 'caro-store/user';
 import { match_RESET } from 'caro-store/match';
 

@@ -63,7 +63,7 @@ class RoomScreen extends PureComponent {
                         <button className="add-button" onClick={ this.onNewRoomButtonClicked }>New room</button>
 
                         {/* Total room status */}
-                        <span>Total rooms: { totalRooms }</span>
+                        {/* <span>Total rooms: { totalRooms }</span> */}
                     </div>
 
                     {/* List rooms */}

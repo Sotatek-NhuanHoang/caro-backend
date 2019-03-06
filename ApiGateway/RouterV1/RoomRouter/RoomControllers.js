@@ -41,9 +41,8 @@ const RoomControllers = {
                 creatorUser: creatorUser,
             });
 
-            SocketClient.call('sendUserId', {
+            SocketClient.call('broadcast', {
                 eventName: SocketServerEvents.room_JOIN,
-                userId: joinedRoom.creatorUserId,
                 params: {
                     room: joinedRoom,
                     competitorUser: joinedUser,
