@@ -26,7 +26,20 @@ io.use(socketMiddleware());
 io.on('connection',  (socket) => {
     socket.on('*', ({ data }) => {
         const [ eventName, params ] = data;
+
+        if (eventName === 'disconnect') {
+            return;
+        }
+
         eventHandler(io, socket, eventName, params);
+    });
+
+    socket.on('disconnect', function () {
+        const { userId } = socket;
+
+        if (!userId) {
+            return;
+        }
     });
 });
 

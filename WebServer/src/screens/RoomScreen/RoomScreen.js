@@ -53,7 +53,7 @@ class RoomScreen extends PureComponent {
 
 
     render() {
-        const { roomIds, isGettingRooms, totalRooms } = this.props;
+        const { roomIds, isGettingRooms } = this.props;
 
         return (
             <div id="room-screen">

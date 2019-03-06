@@ -9,6 +9,7 @@ import globalReducer from './user';
 import roomReducer from './room';
 import userReducer from './user';
 import matchReducer from './match';
+import scoreReducer from './score';
 
 
 const reducers = combineReducers({
@@ -20,6 +21,7 @@ const reducers = combineReducers({
         whitelist: ['currentUser'],
     }, userReducer),
     match: matchReducer,
+    score: scoreReducer,
 });
 
 

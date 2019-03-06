@@ -20,6 +20,7 @@ const UserHandler = (io, socket, eventName, params) => {
                     return;
                 }
 
+                socket.userId = userId;
                 socket.join(userId);
             });
             break;
