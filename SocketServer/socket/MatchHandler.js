@@ -12,6 +12,15 @@ const MatchHandler = (io, socket, eventName, params) => {
                 column: column,
                 competitorUserId: userId,
             });
+            break;
+        }
+
+        case SocketClientEvents.match_READY_NEW_GAME: {
+            const { roomId, competitorUserId } = params;
+            io.to(competitorUserId).emit(SocketServerEvents.match_READY_NEW_GAME, {
+                roomId: roomId,
+            });
+            break;
         }
     }
 };

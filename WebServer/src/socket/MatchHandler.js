@@ -41,6 +41,20 @@ const RoomHandler = (eventName, params) => {
             break;
         }
 
+        case SocketServerEvents.match_READY_NEW_GAME: {
+            const { roomId } = params;
+            const { room } = getState();
+            
+            if (roomId !== room.currentRoomId) {
+                return;
+            }
+
+            dispatch(match_UPDATE_STATE({
+                competitorUserReadyNewGame: true,
+            }));
+            break;
+        }
+
         default:
             break;
     }

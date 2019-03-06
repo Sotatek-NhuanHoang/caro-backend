@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { showConfirmAlert } from 'caro-service/AlertService';
 import { roomSelector } from 'caro-store/room';
+import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
 import CurrentUser from './CurrentUser';
@@ -19,17 +20,36 @@ class MatchScreen extends PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.winnerId && this.props.winnerId) {
-            const didCurrentUserWin = (this.props.winnerId === this.props.currentUser.id);
+        const {
+            winnerId,
+            currentUser,
+            currentUserReadyNewGame,
+            competitorUserReadyNewGame,
+            _playNewGame,
+            _reMatch,
+        } = this.props;
+
+        if (!prevProps.winnerId && winnerId) {
+            const didCurrentUserWin = (winnerId === currentUser.id);
             const title = didCurrentUserWin ? 'You win' : 'You lose';
 
             showConfirmAlert({
                 title: title,
                 message: 'Play new game?',
                 cancelText: 'Exit room',
-                onConfirm: () => {},
-                onCancel: () => {},
+                onConfirm: () => {
+                    _playNewGame();
+                },
+                onCancel: () => {}, // Out room
             });
+        }
+
+        if (
+            currentUserReadyNewGame &&
+            competitorUserReadyNewGame &&
+            (!prevProps.currentUserReadyNewGame || !prevProps.competitorUserReadyNewGame)
+        ) {
+            _reMatch();
         }
     }
 
@@ -68,10 +88,17 @@ const mapStateToProps = ({ room, user, match }) => ({
     room: roomSelector(room, room.currentRoomId),
     currentUser: user.currentUser,
     winnerId: match.winnerId,
+    currentUserReadyNewGame: match.currentUserReadyNewGame,
+    competitorUserReadyNewGame: match.competitorUserReadyNewGame,
 });
 
 const mapDispatchToProps = (dispatch) => ({
- 
+    _playNewGame: () => {
+        return dispatch(match_READY_NEW_GAME());
+    },
+    _reMatch: () => {
+        return dispatch(match_REMATCH());
+    },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MatchScreen);

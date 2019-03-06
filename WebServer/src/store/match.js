@@ -20,6 +20,9 @@ const defaultState = {
     isCurentUserTurn: false,
     squares: {},
     winningSquares: {},
+
+    currentUserReadyNewGame: false,
+    competitorUserReadyNewGame: false,
 };
 
 
@@ -243,6 +246,38 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
     }
 };
 
+export const match_READY_NEW_GAME = () => (dispatch, getState) => {
+    const { user, room } = getState();
+    const { currentUser } = user;
+
+    const currentRoom = room.rooms[room.currentRoomId];
+    const competitorUserId = (currentRoom.creatorUserId === currentUser.id) ? currentRoom.competitorUserId : currentRoom.creatorUserId;
+    
+    dispatch(match_UPDATE_STATE({
+        currentUserReadyNewGame: true,
+    }));
+    
+    socket.emit(SocketClientEvents.match_READY_NEW_GAME, {
+        roomId: currentRoom.id,
+        competitorUserId: competitorUserId,
+    });
+};
+
+export const match_REMATCH = () => (dispatch, getState) => {
+    const { match, user, room } = getState();
+    const { currentUser } = user;
+    const { winnerId } = match;
+    const currentRoom = room.rooms[room.currentRoomId];
+
+    const isCurentUserTurn = (currentUser.id !== winnerId); // Loser go first
+    const competitorUserId = (currentRoom.creatorUserId === currentUser.id) ? currentRoom.competitorUserId : currentRoom.creatorUserId;
+
+    dispatch(match_RESET({
+        isCurentUserTurn: isCurentUserTurn,
+        firstMoveUserId: isCurentUserTurn ? currentUser.id : competitorUserId,
+    }));
+};
+
 
 
 /**
@@ -254,11 +289,7 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
 export const reducer = handleActions({
     match_RESET: (state, { payload }) => {
         return {
-            firstMoveUserId: null,
-            winnerId: null,
-            isCurentUserTurn: false,
-            squares: {},
-            winningSquares: {},
+            ..._.cloneDeep(defaultState),
             ...payload,
         };
     },
