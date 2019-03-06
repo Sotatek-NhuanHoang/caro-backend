@@ -1,5 +1,5 @@
 import SocketServerEvents from 'caro-shared-resource/SocketServerEvents';
-import { dispatch } from 'caro-store';
+import { dispatch, getState } from 'caro-store';
 import { room_UPDATE_STATE } from 'caro-store/room';
 import { user_UPDATE_STATE } from 'caro-store/user';
 import { match_RESET } from 'caro-store/match';
@@ -46,6 +46,29 @@ const RoomHandler = (eventName, params) => {
             dispatch(match_RESET({
                 firstMoveUserId: params.room.creatorUserId,
                 isCurentUserTurn: true,
+            }));
+            break;
+        }
+
+        case SocketServerEvents.room_EXIT: {
+            const { roomId } = params;
+            const { user, room } = getState();
+            const { currentUser } = user;
+
+            if (roomId !== room.currentRoomId) {
+                return;
+            }
+
+            dispatch(room_UPDATE_STATE({
+                rooms: {
+                    [roomId]: {
+                        creatorUserId: currentUser.id,
+                        competitorUserId: null,
+                    },
+                },
+            }));
+            dispatch(match_RESET({
+                firstMoveUserId: currentUser.id,
             }));
             break;
         }

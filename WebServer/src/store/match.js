@@ -252,6 +252,10 @@ export const match_READY_NEW_GAME = () => (dispatch, getState) => {
 
     const currentRoom = room.rooms[room.currentRoomId];
     const competitorUserId = (currentRoom.creatorUserId === currentUser.id) ? currentRoom.competitorUserId : currentRoom.creatorUserId;
+
+    if (!currentRoom.competitorUserId) {
+        return;
+    }
     
     dispatch(match_UPDATE_STATE({
         currentUserReadyNewGame: true,

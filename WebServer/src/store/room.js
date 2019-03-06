@@ -5,6 +5,9 @@ import { user_UPDATE_STATE } from './user';
 import { match_RESET } from './match';
 import { createSelector } from 'reselect';
 import _ from 'lodash';
+import RoomStatus from 'caro-shared-resource/RoomStatus';
+import socket from 'caro-socket';
+import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 
 
 
@@ -18,6 +21,7 @@ const defaultState = {
     total: 0,
     page: 1,
     limit: 20,
+
     isGettingRooms: false,
     getRoomsError: null,
 
@@ -164,6 +168,29 @@ export const room_JOIN_ROOM = (roomId) => async (dispatch) => {
     }
 };
 
+export const room_OUT_ROOM = () => (dispatch, getState) => {
+    const { room, user } = getState();
+    const { currentRoomId } = room;
+    const { currentUser } = user;
+
+
+    if (!currentRoomId) {
+        return;
+    }
+
+    const currentRoom = room.rooms[currentRoomId];
+    const competitorUserId = currentRoom.creatorUserId === currentUser.id ? currentRoom.competitorUserId : currentRoom.creatorUserId;
+
+    dispatch(room_UPDATE_STATE({
+        currentRoomId: null,
+    }));
+    dispatch(match_RESET());
+
+    socket.emit(SocketClientEvents.room_EXIT, {
+        roomId: currentRoomId,
+        competitorUserId: competitorUserId,
+    });
+};
 
 
 
@@ -192,7 +219,10 @@ export const reducer = handleActions({
 export const sortedRoomIdsSelector = createSelector(
     (room) => ({ rooms: room.rooms, }),
     ({ rooms }) => {
-        const sortedRooms = _.sortBy(rooms, (room) => {
+        const availableRooms = _.filter(rooms, (room) => {
+            return (room.status === RoomStatus.WAITING);
+        });
+        const sortedRooms = _.sortBy(availableRooms, (room) => {
             return -room.updated;
         });
         const sortedRoomIds = _.map(sortedRooms, (room) => room.id);

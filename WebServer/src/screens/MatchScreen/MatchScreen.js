@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { showConfirmAlert } from 'caro-service/AlertService';
-import { roomSelector } from 'caro-store/room';
+import { roomSelector, room_OUT_ROOM } from 'caro-store/room';
 import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
@@ -21,13 +21,21 @@ class MatchScreen extends PureComponent {
 
     componentDidUpdate(prevProps) {
         const {
+            history,
             winnerId,
             currentUser,
             currentUserReadyNewGame,
             competitorUserReadyNewGame,
+            room,
             _playNewGame,
             _reMatch,
+            _exitRoom,
         } = this.props;
+
+        if (prevProps.room && !room) {
+            history.push('/rooms');
+            return;
+        }
 
         if (!prevProps.winnerId && winnerId) {
             const didCurrentUserWin = (winnerId === currentUser.id);
@@ -40,7 +48,9 @@ class MatchScreen extends PureComponent {
                 onConfirm: () => {
                     _playNewGame();
                 },
-                onCancel: () => {}, // Out room
+                onCancel: () => {
+                    _exitRoom();
+                }, // Out room
             });
         }
 
@@ -53,6 +63,10 @@ class MatchScreen extends PureComponent {
         }
     }
 
+    
+    onExitRoomButtonClicked = () => {
+        this.props._exitRoom();
+    }
 
     render() {
         const { room, currentUser } = this.props;
@@ -74,7 +88,7 @@ class MatchScreen extends PureComponent {
                     <CurrentUser />
 
                     {/* Exit room button */}
-                    <button className="exit-button">
+                    <button className="exit-button" onClick={ this.onExitRoomButtonClicked }>
                         <i className="fas fa-sign-out-alt fa-lg text-dark"></i>
                     </button>
                 </div>
@@ -98,6 +112,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     _reMatch: () => {
         return dispatch(match_REMATCH());
+    },
+    _exitRoom: () => {
+        return dispatch(room_OUT_ROOM());
     },
 });
 
