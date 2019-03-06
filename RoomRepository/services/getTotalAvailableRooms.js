@@ -6,11 +6,11 @@ const RoomStatus = require('caro-shared-resource/RoomStatus');
 module.exports = function() {
     this.add(`repo:${RepositoryName.ROOM_REPOSITORY},service:getTotalAvailableRooms`, async (msg, done) => {
         try {
-            const { page, limit } = msg;
+            // const { page, limit } = msg;
 
-            const totalAvailablekRooms = await RoomModel.count({ status: RoomStatus.WAITING, });
+            // const totalAvailablekRooms = await RoomModel.count({ status: RoomStatus.WAITING, });
             
-            done(null, { total: totalAvailablekRooms, });
+            done(null, { total: 0, });
         } catch (error) {
             done(error);
         }

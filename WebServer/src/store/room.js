@@ -228,10 +228,10 @@ export const reducer = handleActions({
  */
 
 export const sortedRoomIdsSelector = createSelector(
-    (room) => ({ rooms: room.rooms, }),
-    ({ rooms }) => {
+    (room, user) => ({ rooms: room.rooms, currentUser: user.currentUser, }),
+    ({ rooms, currentUser }) => {
         const availableRooms = _.filter(rooms, (room) => {
-            return (room.status === RoomStatus.WAITING);
+            return (room.status === RoomStatus.WAITING && room.creatorUserId !== currentUser.id);
         });
         const sortedRooms = _.sortBy(availableRooms, (room) => {
             return -room.updated;

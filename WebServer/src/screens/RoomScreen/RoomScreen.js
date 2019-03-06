@@ -85,9 +85,9 @@ class RoomScreen extends PureComponent {
 }
 
 
-const mapStateToProps = ({ room }) => ({
+const mapStateToProps = ({ room, user }) => ({
     totalRooms: room.total,
-    roomIds: sortedRoomIdsSelector(room),
+    roomIds: sortedRoomIdsSelector(room, user),
     isGettingRooms: room.isGettingRooms,
     creatingRoom: room.creatingRoom,
     currentRoomId: room.currentRoomId,

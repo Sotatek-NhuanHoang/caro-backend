@@ -258,8 +258,12 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
 };
 
 export const match_READY_NEW_GAME = () => (dispatch, getState) => {
-    const { user, room } = getState();
+    const { user, room, match } = getState();
     const { currentUser } = user;
+
+    if (!match.winnerId) {
+        return;
+    }
 
     const currentRoom = room.rooms[room.currentRoomId];
     const competitorUserId = (currentRoom.creatorUserId === currentUser.id) ? currentRoom.competitorUserId : currentRoom.creatorUserId;
