@@ -18,7 +18,7 @@ function handler (req, res) {
     res.end('OK');
 }
 
-app.listen(process.env.SERVER_PORT);
+app.listen(process.env.PORT || 8083);
 
 const eventHandler = combineHandlers([
     RoomHandler,

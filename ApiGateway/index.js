@@ -25,6 +25,11 @@ fastify.use(require('x-xss-protection')());
 fastify.register(require('fastify-formbody'));
 
 
+// Status router
+fastify.get('/status', (req, reply) => {
+    reply.status(200).send('OK');
+});
+
 
 /**
  * V1 router
@@ -40,7 +45,7 @@ fastify.register(require('caro-router-v1/RoomRouter'), { prefix: '/v1/rooms' });
 /**
  * Start server
  */
-fastify.listen(process.env.SERVER_PORT, function (err, address) {
+fastify.listen(process.env.PORT || 8080, '0.0.0.0', function (err, address) {
     if (err) {
         console.error(err);
         process.exit(1);

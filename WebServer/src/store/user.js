@@ -1,7 +1,8 @@
 import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
 import { createSelector } from 'reselect';
-// import _ from 'lodash';
+import socket from 'caro-socket';
+import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 import UserApi from 'caro-api/UserApi';
 
 
@@ -46,6 +47,8 @@ export const user_LOGIN = ({ accessToken, facebookId }) => async (dispatch) => {
                 token: response.token,
             },
         }));
+
+        socket.emit(SocketClientEvents.user_AUTHENTICATION, { token: response.token, });
     } catch (error) {
         dispatch(user_UPDATE_STATE({
             isLogging: false,

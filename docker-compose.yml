@@ -1,23 +1,7 @@
 version: '3'
 services:
-  rabbitmq:
-    image: rabbitmq:3.7-alpine
-    restart: always
-    environment:
-      RABBITMQ_DEFAULT_VHOST: my_vhost
+  apigateway:
+    build: .
     ports:
-      - 5672:5672
-
-  mongodb:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-      - 27017:27017
-
-  redis:
-    image: redis:5-alpine
-    ports:
-     - 6379:6379
+      - 8080:8080
+      - 9000:9000

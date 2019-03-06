@@ -25,3 +25,4 @@ Seneca()
         console.log('--- Service ready:', this.id);
         console.log('--- Plugins:', Object.keys(this.list_plugins()));
     });
+

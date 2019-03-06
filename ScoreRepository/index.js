@@ -24,3 +24,10 @@ Seneca()
         console.log('--- Service ready:', this.id);
         console.log('--- Plugins:', Object.keys(this.list_plugins()));
     });
+
+
+const http = require('http');
+http.createServer(function (req, res) {
+    res.write('OK');
+    res.end();
+}).listen(process.env.PORT || 8082);

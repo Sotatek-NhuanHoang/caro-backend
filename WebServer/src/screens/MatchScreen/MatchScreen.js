@@ -20,6 +20,10 @@ class MatchScreen extends PureComponent {
         }
     }
 
+    componentDidMount() {
+        window.addEventListener('popstate', this.onBackButtonPressed, false);
+    }
+
     componentDidUpdate(prevProps) {
         const {
             history,
@@ -72,6 +76,9 @@ class MatchScreen extends PureComponent {
         }
     }
 
+    onBackButtonPressed = () => {
+        this.props._exitRoom();
+    }
     
     onExitRoomButtonClicked = () => {
         this.props._exitRoom();
