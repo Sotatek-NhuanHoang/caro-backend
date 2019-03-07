@@ -7,7 +7,8 @@ RUN apk update \
         wget \
         git \
     && apk add \
-        bash
+        bash \
+    && npm install -g yarn
 
 RUN mkdir /app
 WORKDIR /app
@@ -20,6 +21,6 @@ RUN cp ./env.example.prod ./ApiGateway
 
 WORKDIR /app/caro/ApiGateway
 
-RUN npm install --production && npm cache clean --force
+RUN yarn install --production && yarn cache clean
 
 CMD [ "node", "index.js" ]

@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.3",
-    "seneca": "^3.8.4"
+    "bluebird": "3.5.3",
+    "seneca": "3.8.4",
+    "caro-shared-resource": "../SharedResource"
   }
 }
