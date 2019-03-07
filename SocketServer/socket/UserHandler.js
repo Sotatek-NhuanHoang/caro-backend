@@ -42,27 +42,22 @@ const UserHandler = async (io, socket, eventName, params) => {
             socket.leave(userId);
 
             try {
-                const { rooms: joinedRooms } = await RoomClient.call('getJoinedRoomsByUserId', { userId: userId, });
-    
-                _.forEach(joinedRooms, async ({ _id: roomId }) => {
+                const { availableRooms, deletedRooms } = await RoomClient.call('leaveAllRooms', { userId: userId, });
+                
+                _.forEach(deletedRooms, (room) => {
+                    io.emit(SocketServerEvents.room_REMOVE, {
+                        roomId: room._id,
+                    });
+                });
+
+                _.forEach(availableRooms, async (room) => {
                     try {
-                        const { room, isDeleted } = await RoomClient.call('leaveRoom', {
-                            roomId: roomId,
-                            userId: userId,
+                        const creatorUser = await UserClient.call('getUserById', { userId: room.creatorUserId, });
+
+                        io.emit(SocketServerEvents.room_ADD_NEW, {
+                            room: room,
+                            creatorUser: creatorUser,
                         });
-                        
-                        if (isDeleted) {
-                            io.emit(SocketServerEvents.room_REMOVE, {
-                                roomId: roomId,
-                            });
-                        } else {
-                            const creatorUser = await UserClient.call('getUserById', { userId: room.creatorUserId, });
-        
-                            io.emit(SocketServerEvents.room_ADD_NEW, {
-                                room: room,
-                                creatorUser: creatorUser,
-                            });
-                        }
                     } catch (error) {
                         console.log(error);
                     }
