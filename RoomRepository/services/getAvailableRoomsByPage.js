@@ -13,9 +13,15 @@ module.exports = function() {
                 .skip((page - 1) * limit)
                 .limit(limit);
             
-            done(null, rooms);
+            done(null, {
+                ok: 1,
+                data: rooms,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

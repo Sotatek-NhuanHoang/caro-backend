@@ -19,9 +19,15 @@ module.exports = function() {
             room.status = RoomStatus.PLAYING;
             await room.save();
             
-            done(null, room);
+            done(null, {
+                ok: 1,
+                data: room,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

@@ -23,9 +23,15 @@ module.exports = function() {
             score.score++;
             await score.save();
 
-            done(null, { score });
+            done(null, {
+                ok: 1,
+                data: { score: score },
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

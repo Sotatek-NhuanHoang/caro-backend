@@ -9,9 +9,15 @@ module.exports = function() {
             const users = await UserModel.find({
                 _id: { $in: userIds, },
             });
-            done(null, users);
+            done(null, {
+                ok: 1,
+                data: users,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

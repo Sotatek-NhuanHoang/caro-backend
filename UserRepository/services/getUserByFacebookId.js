@@ -7,9 +7,15 @@ module.exports = function() {
         try {
             const { facebookId } = msg;
             const user = await UserModel.findOne({ facebookId: facebookId, });
-            done(null, user);
+            done(null, {
+                ok: 1,
+                data: user,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

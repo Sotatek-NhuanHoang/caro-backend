@@ -17,9 +17,15 @@ module.exports = function() {
                 });
             }
 
-            done(null, existedUser);
+            done(null, {
+                ok: 1,
+                data: existedUser,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

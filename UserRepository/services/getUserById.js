@@ -7,9 +7,15 @@ module.exports = function() {
         try {
             const { userId } = msg;
             const user = await UserModel.findOne({ _id: userId, });
-            done(null, user);
+            done(null, {
+                ok: 1,
+                data: user,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

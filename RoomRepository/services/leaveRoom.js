@@ -26,11 +26,17 @@ module.exports = function() {
             }
 
             done(null, {
-                room: room,
-                isDeleted: isDeleted,
+                ok: 1,
+                data: {
+                    room: room,
+                    isDeleted: isDeleted,
+                },
             });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

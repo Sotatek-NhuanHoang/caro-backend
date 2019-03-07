@@ -15,14 +15,14 @@ import './MatchScreen.scss';
 class MatchScreen extends PureComponent {
 
     componentWillMount() {
-        if (!this.props.room) {
+        if (!this.props.currentRoomId) {
             this.props.history.push('/rooms');
         }
     }
 
     componentDidMount() {
         document.title = 'Playing';
-        window.addEventListener('popstate', this.onBackButtonPressed, false);
+        window.addEventListener('popstate', this.onBackButtonPressed);
     }
 
     componentDidUpdate(prevProps) {
@@ -77,6 +77,10 @@ class MatchScreen extends PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('popstate', this.onBackButtonPressed);
+    }
+
     onBackButtonPressed = () => {
         this.props._exitRoom();
     }
@@ -116,6 +120,7 @@ class MatchScreen extends PureComponent {
 
 
 const mapStateToProps = ({ room, user, match }) => ({
+    currentRoomId: room.currentRoomId,
     room: roomSelector(room, room.currentRoomId),
     currentUser: user.currentUser,
     winnerId: match.winnerId,
