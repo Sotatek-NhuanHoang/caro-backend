@@ -92,9 +92,9 @@ const RoomControllers = {
             const page = req.query.page || 1;
             const limit = req.query.limit || 30;
 
-            const [rooms, { total }] = await Promise.all([
+            const [rooms] = await Promise.all([
                 RoomClient.call('getAvailableRoomsByPage', { page: page, limit: limit, }),
-                RoomClient.call('getTotalAvailableRooms')
+                // RoomClient.call('getTotalAvailableRooms')
             ]);
 
             const creatorUserIds = _.map(rooms, (room) => room.creatorUserId);
@@ -102,7 +102,7 @@ const RoomControllers = {
 
             reply.status(200).send({
                 rooms: rooms,
-                total: total,
+                total: 0,
                 page: page,
                 limit: limit,
                 creatorUsers: creatorUsers,
