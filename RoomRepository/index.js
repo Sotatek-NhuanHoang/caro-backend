@@ -32,6 +32,9 @@ Seneca()
 
 const http = require('http');
 http.createServer(function (req, res) {
-    res.write('OK');
-    res.end();
+    res.writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    });
+    res.end('OK');
 }).listen(process.env.PORT || 8081);

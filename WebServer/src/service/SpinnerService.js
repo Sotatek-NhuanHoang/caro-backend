@@ -24,5 +24,11 @@ export const showSpinner = () => {
 
 
 export const hideSpinner = () => {
+    const spinnerElement = document.getElementById(spinnerId);
+
+    if (!spinnerElement) {
+        return;
+    }
+    
     document.getElementById(spinnerId).remove();
 };

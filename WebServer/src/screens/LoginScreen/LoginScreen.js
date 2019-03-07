@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import { user_LOGIN } from 'caro-store/user';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
@@ -10,7 +11,7 @@ import './LoginScreen.scss';
 class LoginScreen extends PureComponent {
 
     componentWillMount() {
-        if (this.props.currentUserId) {
+        if (this.props.token) {
             this.props.history.push('/rooms');
         }
     }
@@ -24,7 +25,7 @@ class LoginScreen extends PureComponent {
             hideSpinner();
         }
 
-        if (!prevProps.currentUserId && this.props.currentUserId) {
+        if (this.props.token) {
             this.props.history.push('/rooms');
         }
     }
@@ -62,7 +63,7 @@ class LoginScreen extends PureComponent {
 
 
 const mapStateToProps = ({ user }) => ({
-    currentUserId: user.currentUser.id,
+    token: _.get(user, ['currentUser', 'token']),
     isLogging: user.isLogging,
 });
 

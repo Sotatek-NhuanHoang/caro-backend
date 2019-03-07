@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 
 const Api = create({
-    baseURL: Config.API_SERVER_URL,
+    baseURL: Config.API_SERVER_URL + '/' + Config.API_SERVER_VERSION,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

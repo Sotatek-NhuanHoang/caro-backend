@@ -16,7 +16,7 @@ const reducers = combineReducers({
     global: globalReducer,
     room: roomReducer,
     user: persistReducer({
-        key: 'user-a',
+        key: 'user-xxx',
         storage: storage,
         whitelist: ['currentUser'],
     }, userReducer),

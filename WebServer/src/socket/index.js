@@ -5,6 +5,7 @@ import _ from 'lodash';
 import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 
 import combineHandlers from './combineHandlers';
+import UserHandler from './UserHandler';
 import RoomHandler from './RoomHandler';
 import MatchHandler from './MatchHandler';
 import ScoreHandler from './ScoreHandler';
@@ -15,6 +16,7 @@ const socket = io(Config.SOCKET_SERVER_URL);
 socketWildcard(io.Manager)(socket);
 
 const eventHandler = combineHandlers([
+    UserHandler,
     RoomHandler,
     MatchHandler,
     ScoreHandler
@@ -26,7 +28,7 @@ socket.on('connect', function () {
     const token = _.get(user, ['currentUser', 'token']);
 
     if (token) {
-        socket.emit(SocketClientEvents.user_AUTHENTICATION, { token: token, });
+        socket.emit(SocketClientEvents.user_AUTHENTICATE, { token: token, });
     }
 
     socket.on('*', ({ data }) => {

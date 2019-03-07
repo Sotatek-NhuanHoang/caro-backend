@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { BeatLoader } from 'react-spinners';
 
+import ServerError from 'caro-shared-resource/ServerError';
 import { room_GET_ROOMS, sortedRoomIdsSelector, room_NEW_ROOM } from 'caro-store/room';
+import { user_LOGOUT, user_SOCKET_AUTHENTICATE } from 'caro-store/user';
 import RoomItem from './RoomItem';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
 
@@ -12,12 +14,35 @@ import './RoomScreen.scss';
 
 class RoomScreen extends PureComponent {
 
+    componentWillMount() {
+        if (!this.props.token) {
+            this.props.history.push('/');
+        }
+    }
+
     componentDidMount() {
-        this.props._getRooms(true);
+        if (!this.props.isSocketAuthenticated) {
+            this.props._socketAuthenticate();
+        } else {
+            this.props._getRooms(true);
+        }
+
         document.addEventListener('scroll', this.trackScrolling);
     }
 
     componentDidUpdate(prevProps) {
+        if (!prevProps.isSocketAuthenticated && this.props.isSocketAuthenticated) {
+            this.props._getRooms(true);
+        }
+
+        if (!prevProps.isSocketAuthenticating && this.props.isSocketAuthenticating) {
+            showSpinner();
+        }
+
+        if (prevProps.isSocketAuthenticating && !this.props.isSocketAuthenticating) {
+            hideSpinner();
+        }
+
         if (!prevProps.creatingRoom && this.props.creatingRoom) {
             showSpinner();
         }
@@ -28,6 +53,13 @@ class RoomScreen extends PureComponent {
 
         if (!prevProps.currentRoomId && this.props.currentRoomId) {
             this.props.history.push('match');
+        }
+
+        if (!prevProps.getRoomsError && this.props.getRoomsError) {
+            if (this.props.getRoomsError === ServerError.UNAUTHENTICATED) {
+                this.props.history.push('/');
+                return;
+            }
         }
     }
 
@@ -51,6 +83,11 @@ class RoomScreen extends PureComponent {
         this.props._createRoom();
     }
 
+    onLogoutButtonClicked = () => {
+        this.props._logout();
+        this.props.history.push('/');
+    }
+
 
     render() {
         const { roomIds, isGettingRooms } = this.props;
@@ -64,6 +101,9 @@ class RoomScreen extends PureComponent {
 
                         {/* Total room status */}
                         {/* <span>Total rooms: { totalRooms }</span> */}
+
+                        {/* Logout button */}
+                        <button className="btn btn-link" onClick={ this.onLogoutButtonClicked }>Logout</button>
                     </div>
 
                     {/* List rooms */}
@@ -86,10 +126,19 @@ class RoomScreen extends PureComponent {
 
 
 const mapStateToProps = ({ room, user }) => ({
+    token: _.get(user, ['currentUser', 'token']),
+    isSocketAuthenticated: user.isSocketAuthenticated,
+    isSocketAuthenticating: user.isSocketAuthenticating,
+
     totalRooms: room.total,
     roomIds: sortedRoomIdsSelector(room, user),
+
     isGettingRooms: room.isGettingRooms,
+    getRoomsError: room.getRoomsError,
+
     creatingRoom: room.creatingRoom,
+
+
     currentRoomId: room.currentRoomId,
 });
 
@@ -100,6 +149,12 @@ const mapDispatchToProps = (dispatch) => ({
     _createRoom: () => {
         return dispatch(room_NEW_ROOM());
     },
+    _socketAuthenticate: () => {
+        return dispatch(user_SOCKET_AUTHENTICATE());
+    },
+    _logout: () => {
+        return dispatch(user_LOGOUT());
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomScreen);
