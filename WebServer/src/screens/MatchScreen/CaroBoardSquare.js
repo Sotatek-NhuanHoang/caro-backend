@@ -1,5 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import { SquareType } from 'caro-config';
 import { squareSelector, winningSquareSelector, match_STROKE } from 'caro-store/match';
@@ -34,23 +35,19 @@ class CaroBoardSquare extends PureComponent {
         );
     }
 
-    renderWinningOverlay() {
-        const { isWinningSquare } = this.props;
-
-        if (!isWinningSquare) {
-            return;
-        }
-
-        return (
-            <div className="caro-board-square-winning"></div>
-        );
-    }
-
     render() {
+        const { isWinningSquare, isLastSquare } = this.props;
+
         return (
-            <div id="caro-board-square" onClick={ this.stroke }>
+            <div
+                id="caro-board-square"
+                className={classNames({
+                    'square-winning': isWinningSquare,
+                    'square-last-index': isLastSquare,
+                })}
+                onClick={ this.stroke }
+            >
                 { this.renderXO() }
-                { this.renderWinningOverlay() }
             </div>
         );
     }
@@ -60,6 +57,7 @@ class CaroBoardSquare extends PureComponent {
 const mapStateToProps = ({ match }, ownProps) => ({
     squareType: squareSelector(match, ownProps.row, ownProps.column),
     isWinningSquare: winningSquareSelector(match, ownProps.row, ownProps.column),
+    isLastSquare: match.lastSquareIndex === (ownProps.row + ',' + ownProps.column),
 });
 
 const mapDispatchToProps = (dispatch) => ({

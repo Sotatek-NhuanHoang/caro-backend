@@ -12,12 +12,11 @@
         cursor: pointer;
     }
 
-    .caro-board-square-winning {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+    &.square-last-index {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &.square-winning {
         background-color: rgba(249, 202, 36, 0.6);
     }
 

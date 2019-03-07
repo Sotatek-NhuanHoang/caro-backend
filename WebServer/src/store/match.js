@@ -6,6 +6,7 @@ import _ from 'lodash';
 import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 import socket from 'caro-socket';
 import { showError } from 'caro-service/AlertService';
+import sleep from 'sleep-promise';
 
 
 
@@ -20,6 +21,7 @@ const defaultState = {
     winnerId: null,
     isCurentUserTurn: false,
     squares: {},
+    lastSquareIndex: '',
     winningSquares: {},
 
     currentUserReadyNewGame: false,
@@ -202,7 +204,7 @@ export const match_RESET = createAction('match_RESET');
 
 export const match_UPDATE_STATE = createAction('match_UPDATE_STATE');
 
-export const match_STROKE = (row, column) => (dispatch, getState) => {
+export const match_STROKE = (row, column) => async (dispatch, getState) => {
     const { match, user, room } = getState();
     const { isCurentUserTurn, squares, firstMoveUserId } = match;
 
@@ -232,6 +234,7 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
         squares: {
             [squareIndex]: squareType,
         },
+        lastSquareIndex: squareIndex,
     }));
 
     socket.emit(SocketClientEvents.match_STROKE, {
@@ -246,14 +249,16 @@ export const match_STROKE = (row, column) => (dispatch, getState) => {
     const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
 
     if (winningSquares) {
-        dispatch(match_UPDATE_STATE({
-            winningSquares: winningSquares,
-            winnerId: currentUser.id,
-        }));
         socket.emit(SocketClientEvents.match_WIN, {
             userId: currentUser.id,
             competitorUserId: competitorUserId,
         });
+
+        await sleep(2000);
+        dispatch(match_UPDATE_STATE({
+            winningSquares: winningSquares,
+            winnerId: currentUser.id,
+        }));
     }
 };
 

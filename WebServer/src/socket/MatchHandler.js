@@ -2,9 +2,10 @@ import SocketServerEvents from 'caro-shared-resource/SocketServerEvents';
 import { dispatch, getState } from 'caro-store';
 import { match_UPDATE_STATE, checkWinningMatchFromIndex } from 'caro-store/match';
 import Config from 'caro-config';
+import sleep from 'sleep-promise';
 
 
-const RoomHandler = (eventName, params) => {
+const RoomHandler = async (eventName, params) => {
     switch (eventName) {
         case SocketServerEvents.match_STROKE: {
             const { roomId, row, column, competitorUserId } = params;
@@ -23,12 +24,14 @@ const RoomHandler = (eventName, params) => {
                 squares: {
                     [competitorSquareIndex]: competitorSquareType,
                 },
+                lastSquareIndex: competitorSquareIndex,
             }));
 
             const { match: nextMatch } = getState();
             const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
 
             if (winningSquares) {
+                await sleep(2000);
                 dispatch(match_UPDATE_STATE({
                     winningSquares: winningSquares,
                     winnerId: competitorUserId,
