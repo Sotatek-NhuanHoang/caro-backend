@@ -57,11 +57,10 @@ class RoomScreen extends PureComponent {
         }
 
         if (!prevProps.currentRoomId && this.props.currentRoomId) {
-            this.props.history.push('match');
+            this.props.history.push('/match');
         }
 
         if (!prevProps.getRoomsError && this.props.getRoomsError) {
-            console.log(this.props.getRoomsError);
             if (this.props.getRoomsError === ServerError.UNAUTHENTICATED) {
                 this.props._logout();
                 this.props.history.push('/');

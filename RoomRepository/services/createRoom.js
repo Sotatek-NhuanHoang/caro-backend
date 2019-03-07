@@ -14,9 +14,15 @@ module.exports = function() {
                 firstMoveUser: userId,
                 updated: Date.now(),
             });
-            done(null, newRoom);
+            done(null, {
+                ok: 1,
+                data: newRoom,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

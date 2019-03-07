@@ -22,7 +22,14 @@ module.exports = (repositoryName) => {
                 reject(err);
                 return;
             }
-            resolve(res);
+            
+            const { ok, data } = res;
+
+            if (ok === 1) {
+                resolve(data);
+            } else {
+                reject(new Error(data));
+            }
         });
     });
 

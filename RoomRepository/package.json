@@ -10,9 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "3.5.3",
     "caro-database": "./database",
     "caro-shared-resource": "../SharedResource",
     "dotenv": "6.2.0",
+    "lodash": "4.17.11",
     "mongoose": "5.4.17",
     "seneca": "3.8.4",
     "seneca-amqp-transport": "2.2.0"

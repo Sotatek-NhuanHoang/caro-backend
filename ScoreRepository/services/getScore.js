@@ -20,9 +20,15 @@ module.exports = function() {
                 });
             }
 
-            done(null, score);
+            done(null, {
+                ok: 1,
+                data: score,
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };

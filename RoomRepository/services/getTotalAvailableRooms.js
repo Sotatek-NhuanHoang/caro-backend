@@ -10,9 +10,15 @@ module.exports = function() {
 
             // const totalAvailablekRooms = await RoomModel.count({ status: RoomStatus.WAITING, });
             
-            done(null, { total: 0, });
+            done(null, {
+                ok: 1,
+                data: { total: 0, },
+            });
         } catch (error) {
-            done(error);
+            done({
+                ok: 0,
+                data: error.message,
+            });
         }
     });
 };
