@@ -17,7 +17,9 @@ module.exports = function() {
             const room = await RoomModel.findOne({ _id: roomId, }).session(session);
 
             if (!room) {
-                session.commitTransaction();
+                await session.commitTransaction();
+                session.endSession();
+
                 done(null, {
                     ok: 0,
                     data: ServerError.ROOM_DELETED,
@@ -26,7 +28,9 @@ module.exports = function() {
             }
 
             if (room.competitorUserId) {
-                session.commitTransaction();
+                await session.commitTransaction();
+                session.endSession();
+                
                 done(null, {
                     ok: 0,
                     data: ServerError.ROOM_FULL,
