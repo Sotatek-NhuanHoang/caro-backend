@@ -23,4 +23,4 @@ WORKDIR /app/caro/ApiGateway
 
 RUN yarn install --production && yarn cache clean
 
-CMD [ "node", "index.js" ]
+CMD ["yarn", "start"]

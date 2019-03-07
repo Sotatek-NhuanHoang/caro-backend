@@ -10,16 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.3",
-    "caro-repository-client": "../SharedResource/RepositoryClient",
+    "bluebird": "3.5.3",
+    "caro-repository-client": "../RepositoryClient",
     "caro-shared-resource": "../SharedResource",
     "caro-socket": "./socket",
-    "dotenv": "^6.2.0",
-    "jsonwebtoken": "^8.5.0",
-    "lodash": "^4.17.11",
-    "seneca": "^3.8.4",
-    "seneca-amqp-transport": "^2.2.0",
-    "socket.io": "^2.2.0",
-    "socketio-wildcard": "^2.0.0"
+    "dotenv": "6.2.0",
+    "jsonwebtoken": "8.5.0",
+    "lodash": "4.17.11",
+    "seneca": "3.8.4",
+    "seneca-amqp-transport": "2.2.0",
+    "socket.io": "2.2.0",
+    "socketio-wildcard": "2.0.0"
   }
 }
