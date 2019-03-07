@@ -11,6 +11,14 @@
     }
 
     > .user-name {
+        position: relative;
         margin-top: 0.4rem;
+
+        > .user-current-turn-icon {
+            position: absolute;
+            top: 0.2rem;
+            right: -1.5rem;
+            color: #27ae60;
+        }
     }
 }

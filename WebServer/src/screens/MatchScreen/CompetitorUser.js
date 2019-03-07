@@ -10,14 +10,21 @@ import './CompetitorUser.scss';
 class CompetitorUser extends PureComponent {
 
     render() {
-        const { competitorUser, userId } = this.props;
+        const { competitorUser, userId, isCurentUserTurn } = this.props;
 
         return (
             <div id="current-user">
                 {competitorUser ? (
                     <Fragment>
                         <img className="user-avatar" alt="avatar" src={ competitorUser.avatar } />
-                        <p className="user-name text-bold">{ competitorUser.username }</p>
+                        <p className="user-name text-bold">
+                            { competitorUser.username }
+
+                            {/* Competitor turn status */}
+                            {!isCurentUserTurn ? (
+                                <i className="fas fa-user-clock user-current-turn-icon"></i>
+                            ) : null}
+                        </p>
                         
                         <UserScore userId={ competitorUser.id } competitorUserId={ userId } />
 
@@ -35,8 +42,9 @@ class CompetitorUser extends PureComponent {
 }
 
 
-const mapStateToProps = ({ user }, ownProps) => ({
+const mapStateToProps = ({ user, match }, ownProps) => ({
     competitorUser: otherUserSelector(user, ownProps.competitorUserId),
+    isCurentUserTurn: match.isCurentUserTurn,
 });
 
 const mapDispatchToProps = (dispatch) => ({
