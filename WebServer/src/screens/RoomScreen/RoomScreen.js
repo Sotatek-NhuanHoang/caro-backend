@@ -21,13 +21,14 @@ class RoomScreen extends PureComponent {
     }
 
     componentDidMount() {
+        document.title = 'Room';
+        document.addEventListener('scroll', this.trackScrolling);
+
         if (!this.props.isSocketAuthenticated) {
             this.props._socketAuthenticate();
         } else {
             this.props._getRooms(true);
         }
-
-        document.addEventListener('scroll', this.trackScrolling);
     }
 
     componentDidUpdate(prevProps) {
@@ -41,6 +42,10 @@ class RoomScreen extends PureComponent {
 
         if (prevProps.isSocketAuthenticating && !this.props.isSocketAuthenticating) {
             hideSpinner();
+            if (!this.props.isSocketAuthenticated) {
+                this.props._logout();
+                this.props.history.push('/');
+            }
         }
 
         if (!prevProps.creatingRoom && this.props.creatingRoom) {
@@ -56,7 +61,9 @@ class RoomScreen extends PureComponent {
         }
 
         if (!prevProps.getRoomsError && this.props.getRoomsError) {
+            console.log(this.props.getRoomsError);
             if (this.props.getRoomsError === ServerError.UNAUTHENTICATED) {
+                this.props._logout();
                 this.props.history.push('/');
                 return;
             }

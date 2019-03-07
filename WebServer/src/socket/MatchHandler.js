@@ -31,9 +31,12 @@ const RoomHandler = async (eventName, params) => {
             const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
 
             if (winningSquares) {
-                await sleep(2000);
                 dispatch(match_UPDATE_STATE({
                     winningSquares: winningSquares,
+                }));
+
+                await sleep(1500);
+                dispatch(match_UPDATE_STATE({
                     winnerId: competitorUserId,
                 }));
             } else {

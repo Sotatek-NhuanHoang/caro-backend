@@ -16,6 +16,10 @@ class LoginScreen extends PureComponent {
         }
     }
 
+    componentDidMount() {
+        document.title = 'Caro online';
+    }
+
     componentDidUpdate(prevProps) {
         if (!prevProps.isLogging && this.props.isLogging) {
             showSpinner();

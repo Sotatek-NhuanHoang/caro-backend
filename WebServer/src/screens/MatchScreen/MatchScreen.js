@@ -21,6 +21,7 @@ class MatchScreen extends PureComponent {
     }
 
     componentDidMount() {
+        document.title = 'Playing';
         window.addEventListener('popstate', this.onBackButtonPressed, false);
     }
 

@@ -7,7 +7,7 @@ const RepositoryName = require('caro-shared-resource/RepositoryName');
 
 // Load services
 Seneca()
-    // .quiet()
+    .quiet()
     .use('seneca-amqp-transport')
     .use('services/createRoom')
     .use('services/joinRoom')

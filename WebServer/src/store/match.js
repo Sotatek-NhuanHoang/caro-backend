@@ -249,14 +249,16 @@ export const match_STROKE = (row, column) => async (dispatch, getState) => {
     const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
 
     if (winningSquares) {
+        dispatch(match_UPDATE_STATE({
+            winningSquares: winningSquares,
+        }));
         socket.emit(SocketClientEvents.match_WIN, {
             userId: currentUser.id,
             competitorUserId: competitorUserId,
         });
 
-        await sleep(2000);
+        await sleep(1500);
         dispatch(match_UPDATE_STATE({
-            winningSquares: winningSquares,
             winnerId: currentUser.id,
         }));
     }
