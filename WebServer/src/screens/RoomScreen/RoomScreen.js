@@ -73,6 +73,7 @@ class RoomScreen extends PureComponent {
                 default:
                     showError('Something went wrong');
             }
+            this.props._getRooms(true);
         }
 
         // Joined room
