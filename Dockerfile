@@ -6,8 +6,6 @@ RUN apk update \
         gcc \
         wget \
         git \
-    && apk add \
-        bash \
     && npm install -g yarn
 
 RUN mkdir /app
@@ -17,9 +15,9 @@ RUN git clone https://github.com/Sotatek-NhuanHoang/caro-backend caro
 
 WORKDIR /app/caro
 
-RUN cp ./env.example.prod ./ApiGateway
+RUN cp ./env.example.prod ./UserRepository/.env
 
-WORKDIR /app/caro/ApiGateway
+WORKDIR /app/caro/UserRepository
 
 RUN yarn install --production && yarn cache clean
 

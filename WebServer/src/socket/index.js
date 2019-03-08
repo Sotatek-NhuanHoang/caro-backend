@@ -34,7 +34,10 @@ socket.on('connect', function () {
     socket.on('*', ({ data }) => {
         const [ eventName, params ] = data;
         eventHandler(eventName, params);
-        // console.log('socket: ', eventName, params);
+
+        if (process.env.NODE_ENV === 'development') {
+            console.log('socket: ', eventName, params);
+        }
     });
 });
 
