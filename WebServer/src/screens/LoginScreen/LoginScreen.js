@@ -54,7 +54,8 @@ class LoginScreen extends PureComponent {
     render() {
         return (
             <div id="login-screen">
-                <h1>Caro online</h1>
+                <h1 className="title">Caro online</h1>
+                <h6>The world leader strategy game</h6>
 
                 {/* Facebook login button */}
                 <button className="loginBtn loginBtn--facebook" onClick={() => this.onLoginButtonPressed()}>

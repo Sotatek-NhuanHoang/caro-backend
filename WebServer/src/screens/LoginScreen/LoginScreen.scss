@@ -5,11 +5,15 @@
     align-items: center;
     justify-content: center;
 
+    > .title {
+        margin-bottom: 0.4rem;
+        font-size: 3rem;
+    }
+
     .loginBtn {
         box-sizing: border-box;
         position: relative;
-        /* width: 13em;  - apply for fixed size */
-        margin: 0.2em;
+        margin-top: 2rem;
         padding: 0 15px 0 46px;
         border: none;
         text-align: left;
