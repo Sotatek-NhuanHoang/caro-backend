@@ -5,6 +5,7 @@ import { showConfirmAlert } from 'caro-service/AlertService';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
 import { roomSelector, room_OUT_ROOM } from 'caro-store/room';
 import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
+import { showInfo } from 'caro-service/AlertService';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
 import CurrentUser from './CurrentUser';
@@ -74,6 +75,7 @@ class MatchScreen extends PureComponent {
             (!prevProps.currentUserReadyNewGame || !prevProps.competitorUserReadyNewGame)
         ) {
             _reMatch();
+            showInfo('Start new match');
         }
     }
 

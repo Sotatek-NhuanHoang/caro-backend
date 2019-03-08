@@ -8,6 +8,7 @@ import { room_GET_ROOMS, sortedRoomIdsSelector, room_NEW_ROOM } from 'caro-store
 import { user_LOGOUT, user_SOCKET_AUTHENTICATE } from 'caro-store/user';
 import RoomItem from './RoomItem';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
+import { showError } from 'caro-service/AlertService';
 
 import './RoomScreen.scss';
 
@@ -36,6 +37,7 @@ class RoomScreen extends PureComponent {
             this.props._getRooms(true);
         }
 
+        // Socket authenticate spinner
         if (!prevProps.isSocketAuthenticating && this.props.isSocketAuthenticating) {
             showSpinner();
         }
@@ -48,23 +50,44 @@ class RoomScreen extends PureComponent {
             }
         }
 
-        if (!prevProps.creatingRoom && this.props.creatingRoom) {
+        // Joining room spinner
+        if (!prevProps.joiningRoom && this.props.joiningRoom) {
             showSpinner();
         }
 
-        if (prevProps.creatingRoom && !this.props.creatingRoom) {
+        if (prevProps.joiningRoom && !this.props.joiningRoom) {
             hideSpinner();
         }
 
+        // Join room error message
+        if (!prevProps.joinRoomError && this.props.joinRoomError) {
+            switch(this.props.joinRoomError) {
+                case ServerError.ROOM_FULL:
+                    showError('Room full');
+                    break;
+
+                case ServerError.ROOM_DELETED:
+                    showError('Room has been deleted');
+                    break;
+
+                default:
+                    showError('Something went wrong');
+            }
+        }
+
+        // Joined room
         if (!prevProps.currentRoomId && this.props.currentRoomId) {
             this.props.history.push('/match');
         }
 
+        // Get room error
         if (!prevProps.getRoomsError && this.props.getRoomsError) {
             if (this.props.getRoomsError === ServerError.UNAUTHENTICATED) {
                 this.props._logout();
                 this.props.history.push('/');
                 return;
+            } else {
+                showError('Can not connect to server');
             }
         }
     }
@@ -142,8 +165,8 @@ const mapStateToProps = ({ room, user }) => ({
     isGettingRooms: room.isGettingRooms,
     getRoomsError: room.getRoomsError,
 
-    creatingRoom: room.creatingRoom,
-
+    joiningRoom: room.joiningRoom,
+    joinRoomError: room.joinRoomError,
 
     currentRoomId: room.currentRoomId,
 });

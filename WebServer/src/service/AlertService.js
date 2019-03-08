@@ -17,6 +17,13 @@ export const showError = (msg) => {
     }).show();
 };
 
+export const showInfo = (msg) => {
+    new Noty({
+        type: 'info',
+        text: msg,
+        ...alertOptions
+    }).show();
+};
 
 export const showConfirmAlert = ({ title, message, confirmText = 'Yes', onConfirm, cancelText = 'No', onCancel}) => {
     confirmAlert({

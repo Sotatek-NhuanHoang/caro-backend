@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { user_LOGIN } from 'caro-store/user';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
+import { showError } from 'caro-service/AlertService';
 
 import './LoginScreen.scss';
 
@@ -27,6 +28,10 @@ class LoginScreen extends PureComponent {
 
         if (prevProps.isLogging && !this.props.isLogging) {
             hideSpinner();
+        }
+
+        if (!prevProps.loginError && this.props.loginError) {
+            showError('Can not connect to server');
         }
 
         if (this.props.token) {
@@ -70,6 +75,7 @@ class LoginScreen extends PureComponent {
 const mapStateToProps = ({ user }) => ({
     token: _.get(user, ['currentUser', 'token']),
     isLogging: user.isLogging,
+    loginError: user.loginError,
 });
 
 const mapDispatchToProps = (dispatch) => ({

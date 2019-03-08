@@ -25,8 +25,8 @@ const defaultState = {
     isGettingRooms: false,
     getRoomsError: null,
 
-    creatingRoom: false,
-    createRoomError: null,
+    joiningRoom: false,
+    joinRoomError: null,
 
     currentRoomId: null,
 };
@@ -107,8 +107,8 @@ export const room_GET_ROOMS = (shouldRefresh = false) => async (dispatch, getSta
 
 export const room_NEW_ROOM = () => async (dispatch) => {
     dispatch(room_UPDATE_STATE({
-        creatingRoom: true,
-        createRoomError: null,
+        joiningRoom: true,
+        joinRoomError: null,
     }));
 
     try {
@@ -122,20 +122,20 @@ export const room_NEW_ROOM = () => async (dispatch) => {
                 }
             },
             currentRoomId: newRoom._id,
-            creatingRoom: false,
+            joiningRoom: false,
         }));
     } catch (error) {
         dispatch(room_UPDATE_STATE({
-            creatingRoom: false,
-            createRoomError: error.message,
+            joiningRoom: false,
+            joinRoomError: error.message,
         }));
     }
 };
 
 export const room_JOIN_ROOM = (roomId) => async (dispatch) => {
     dispatch(room_UPDATE_STATE({
-        creatingRoom: true,
-        createRoomError: null,
+        joiningRoom: true,
+        joinRoomError: null,
     }));
 
     try {
@@ -158,15 +158,15 @@ export const room_JOIN_ROOM = (roomId) => async (dispatch) => {
                 }
             },
             currentRoomId: joinedRoom._id,
-            creatingRoom: false,
+            joiningRoom: false,
         }));
         dispatch(match_RESET({
             firstMoveUserId: creatorUser._id,
         }));
     } catch (error) {
         dispatch(room_UPDATE_STATE({
-            creatingRoom: false,
-            createRoomError: error.message,
+            joiningRoom: false,
+            joinRoomError: error.message,
         }));
     }
 };

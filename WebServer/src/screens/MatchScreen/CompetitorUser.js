@@ -2,12 +2,23 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { otherUserSelector } from 'caro-store/user';
+import { showInfo } from 'caro-service/AlertService';
 import UserScore from './UserScore';
 
 import './CompetitorUser.scss';
 
 
 class CompetitorUser extends PureComponent {
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.competitorUser && this.props.competitorUser) {
+            showInfo(`${this.props.competitorUser.username} has joined the room`);
+        }
+
+        if (prevProps.competitorUser && !this.props.competitorUser) {
+            showInfo(`${prevProps.competitorUser.username} has lefted the room`);
+        }
+    }
 
     render() {
         const { competitorUser, userId, isCurentUserTurn } = this.props;
