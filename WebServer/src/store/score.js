@@ -41,6 +41,23 @@ export const score_SUBSCRIBE = () => (dispatch, getState) => {
         sync.cancel();
     }
 
+    const newSync = ScoreDB.sync('http://localhost:5984/scoredb', {
+        live: true,
+        retry: true,
+        push: true,
+        pull: true,
+        selector: {
+            $or: [
+                { userId: currentUser.id, competitorUserId: competitorUserId, },
+                { userId: competitorUserId, competitorUserId: currentUser.id, },
+            ],
+        },
+    });
+
+    dispatch(score_UPDATE_STATE({
+        sync: newSync,
+    }));
+
     ScoreDB.changes({
         selector: {
             $or: [
@@ -64,24 +81,22 @@ export const score_SUBSCRIBE = () => (dispatch, getState) => {
             },
         }));
     });
+};
 
-    const newSync = ScoreDB.sync('http://localhost:5984/scoredb', {
-        live: true,
-        retry: true,
-        push: true,
-        pull: true,
-        selector: {
-            $or: [
-                { userId: currentUser.id, competitorUserId: competitorUserId, },
-                { userId: competitorUserId, competitorUserId: currentUser.id, },
-            ],
-        },
-    });
+
+export const score_UNSUBSCRIBE = () => (dispatch, getState) => {
+    const { score } = getState();
+    const { sync } = score;
+
+    if (sync) {
+        sync.cancel();
+    }
 
     dispatch(score_UPDATE_STATE({
-        sync: newSync,
+        sync: null,
     }));
 };
+
 
 export const score_INCREASE_SCORE = () => async (dispatch, getState) => {
     const { room, user } = getState();
@@ -108,7 +123,7 @@ export const score_INCREASE_SCORE = () => async (dispatch, getState) => {
             await ScoreDB.put(scoreDoc);
         }
     } catch (error) {
-        console.log(error)
+        
     }
 };
 

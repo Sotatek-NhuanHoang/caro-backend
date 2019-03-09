@@ -5,7 +5,7 @@ import { showConfirmAlert } from 'caro-service/AlertService';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
 import { roomSelector, room_OUT_ROOM, competitorUserIdSelector } from 'caro-store/room';
 import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
-import { score_SUBSCRIBE } from 'caro-store/score';
+import { score_SUBSCRIBE, score_UNSUBSCRIBE } from 'caro-store/score';
 import { showInfo } from 'caro-service/AlertService';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
@@ -91,6 +91,7 @@ class MatchScreen extends PureComponent {
 
     componentWillUnmount() {
         window.removeEventListener('popstate', this.onBackButtonPressed);
+        this.props._unsubscribe();
     }
 
     onBackButtonPressed = () => {
@@ -153,6 +154,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     _subscribe: () => {
         dispatch(score_SUBSCRIBE());
+    },
+    _unsubscribe: () => {
+        dispatch(score_UNSUBSCRIBE());
     },
 });
 
