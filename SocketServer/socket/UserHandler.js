@@ -17,17 +17,21 @@ const UserHandler = async (io, socket, eventName, params) => {
                     return;
                 }
                 
-                const { userId } = decoded;
-                const user = await UserClient.call('getUserById', { userId: userId, });
-                
-                if (!user) {
-                    socket.emit(SocketServerEvents.user_UNAUTHENTICATED);
-                    return;
-                }
+                try {
+                    const { userId } = decoded;
+                    const user = await UserClient.call('getUserById', { userId: userId, });
+                    
+                    if (!user) {
+                        socket.emit(SocketServerEvents.user_UNAUTHENTICATED);
+                        return;
+                    }
 
-                socket.userId = userId;
-                socket.join(userId);
-                socket.emit(SocketServerEvents.user_AUTHENTICATED);
+                    socket.userId = userId;
+                    socket.join(userId);
+                    socket.emit(SocketServerEvents.user_AUTHENTICATED);
+                } catch (error) {
+                    socket.emit(SocketServerEvents.user_UNAUTHENTICATED);
+                }
             });
             break;
         }

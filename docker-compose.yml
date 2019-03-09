@@ -17,7 +17,7 @@ services:
     ports:
       - 27017:27017
 
-  pouchdb:
-    image: nickdex/pouchdb-server
+  couchdb:
+    image: couchdb
     ports:
       - 5984:5984

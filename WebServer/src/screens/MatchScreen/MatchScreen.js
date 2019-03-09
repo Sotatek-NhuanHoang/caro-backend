@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import { showConfirmAlert } from 'caro-service/AlertService';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
-import { roomSelector, room_OUT_ROOM } from 'caro-store/room';
+import { roomSelector, room_OUT_ROOM, competitorUserIdSelector } from 'caro-store/room';
 import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
+import { score_SUBSCRIBE } from 'caro-store/score';
 import { showInfo } from 'caro-service/AlertService';
 import CaroBoard from './CaroBoard';
 import CompetitorUser from './CompetitorUser';
@@ -18,6 +19,10 @@ class MatchScreen extends PureComponent {
     componentWillMount() {
         if (!this.props.currentRoomId) {
             this.props.history.push('/rooms');
+        }
+
+        if (this.props.competitorUserId) {
+            this.props._subscribe();
         }
     }
 
@@ -33,6 +38,7 @@ class MatchScreen extends PureComponent {
             currentUser,
             currentUserReadyNewGame,
             competitorUserReadyNewGame,
+            competitorUserId,
             room,
             _playNewGame,
             _reMatch,
@@ -42,6 +48,10 @@ class MatchScreen extends PureComponent {
         if (prevProps.room && !room) {
             history.push('/rooms');
             return;
+        }
+
+        if (!prevProps.competitorUserId && competitorUserId) {
+            this.props._subscribe();
         }
 
         if (!prevProps.winnerId && winnerId) {
@@ -123,6 +133,7 @@ class MatchScreen extends PureComponent {
 
 const mapStateToProps = ({ room, user, match }) => ({
     currentRoomId: room.currentRoomId,
+    competitorUserId: competitorUserIdSelector(room, user),
     room: roomSelector(room, room.currentRoomId),
     currentUser: user.currentUser,
     winnerId: match.winnerId,
@@ -139,6 +150,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     _exitRoom: () => {
         return dispatch(room_OUT_ROOM());
+    },
+    _subscribe: () => {
+        dispatch(score_SUBSCRIBE());
     },
 });
 

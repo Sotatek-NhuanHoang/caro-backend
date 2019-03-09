@@ -248,6 +248,21 @@ export const roomSelector = createSelector(
     }
 );
 
+export const competitorUserIdSelector = createSelector(
+    (room, user) => ({
+        currentRoom: room.rooms[room.currentRoomId],
+        currentUser: user.currentUser,
+    }),
+    ({ currentRoom, currentUser }) => {
+        if (!currentRoom) {
+            return '';
+        }
+
+        const competitorUserId = currentRoom.creatorUserId === currentUser.id ? currentRoom.competitorUserId : currentRoom.creatorUserId;
+        return competitorUserId;
+    }
+);
+
 
 
 export default reducer;

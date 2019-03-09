@@ -1,12 +1,14 @@
 import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
 import { createSelector } from 'reselect';
-import Config from 'caro-config';
+import sleep from 'sleep-promise';
 import _ from 'lodash';
+
+import Config from 'caro-config';
 import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 import socket from 'caro-socket';
 import { showError } from 'caro-service/AlertService';
-import sleep from 'sleep-promise';
+import { score_INCREASE_SCORE } from './score';
 
 
 
@@ -249,13 +251,10 @@ export const match_STROKE = (row, column) => async (dispatch, getState) => {
     const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
 
     if (winningSquares) {
+        dispatch(score_INCREASE_SCORE());
         dispatch(match_UPDATE_STATE({
             winningSquares: winningSquares,
         }));
-        socket.emit(SocketClientEvents.match_WIN, {
-            userId: currentUser.id,
-            competitorUserId: competitorUserId,
-        });
 
         await sleep(1500);
         dispatch(match_UPDATE_STATE({
