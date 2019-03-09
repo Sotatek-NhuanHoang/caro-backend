@@ -1,6 +1,5 @@
 const SocketClientEvents = require('caro-shared-resource/SocketClientEvents');
 const SocketServerEvents = require('caro-shared-resource/SocketServerEvents');
-const ScoreClient = require('caro-repository-client/ScoreClient');
 
 
 const MatchHandler = async (io, socket, eventName, params) => {
@@ -25,18 +24,6 @@ const MatchHandler = async (io, socket, eventName, params) => {
         }
 
         case SocketClientEvents.match_WIN: {
-            const { userId, competitorUserId } = params;
-            const { score } = await ScoreClient.call('increaseScore', {
-                userId: userId,
-                competitorUserId: competitorUserId,
-            });
-
-            io.to(userId).emit(SocketServerEvents.score_UPDATE, {
-                scores: [score],
-            });
-            io.to(competitorUserId).emit(SocketServerEvents.score_UPDATE, {
-                scores: [score],
-            });
             break;
         }
     }

@@ -3,7 +3,6 @@ const _ = require('lodash');
 const RoomClient = require('caro-repository-client/RoomClient');
 const UserClient = require('caro-repository-client/UserClient');
 const SocketClient = require('caro-repository-client/SocketClient');
-const ScoreClient = require('caro-repository-client/ScoreClient');
 const SocketServerEvents = require('caro-shared-resource/SocketServerEvents');
 
 
@@ -32,17 +31,9 @@ const RoomControllers = {
             const { roomId } = req.body;
 
             const joinedRoom = await RoomClient.call('joinRoom', { roomId: roomId, userId: req.user._id });
-            const [creatorUser, joinedUser, score1, score2] = await Promise.all([
+            const [creatorUser, joinedUser] = await Promise.all([
                 UserClient.call('getUserById', { userId: joinedRoom.creatorUserId, }),
-                UserClient.call('getUserById', { userId: req.user._id, }),
-                ScoreClient.call('getScore', {
-                    userId: joinedRoom.creatorUserId,
-                    competitorUserId: req.user._id,
-                }),
-                ScoreClient.call('getScore', {
-                    userId: req.user._id,
-                    competitorUserId: joinedRoom.creatorUserId,
-                }),
+                UserClient.call('getUserById', { userId: req.user._id, })
             ]);
 
             reply.status(200).send({
@@ -64,22 +55,6 @@ const RoomControllers = {
                 params: {
                     room: joinedRoom,
                     competitorUser: joinedUser,
-                },
-            });
-
-            // Update score
-            SocketClient.call('sendUserId', {
-                eventName: SocketServerEvents.score_UPDATE,
-                userId: joinedRoom.creatorUserId,
-                params: {
-                    scores: [score1, score2],
-                },
-            });
-            SocketClient.call('sendUserId', {
-                eventName: SocketServerEvents.score_UPDATE,
-                userId: req.user._id,
-                params: {
-                    scores: [score1, score2],
                 },
             });
         } catch (error) {
