@@ -41,17 +41,19 @@ export const score_SUBSCRIBE = () => (dispatch, getState) => {
         sync.cancel();
     }
 
+    const selector = {
+        $or: [
+            { userId: currentUser.id, competitorUserId: competitorUserId, },
+            { userId: competitorUserId, competitorUserId: currentUser.id, },
+        ],
+    };
+
     const newSync = ScoreDB.sync('http://localhost:5984/scoredb', {
         live: true,
         retry: true,
         push: true,
         pull: true,
-        selector: {
-            $or: [
-                { userId: currentUser.id, competitorUserId: competitorUserId, },
-                { userId: competitorUserId, competitorUserId: currentUser.id, },
-            ],
-        },
+        selector: selector,
     });
 
     dispatch(score_UPDATE_STATE({
@@ -59,12 +61,7 @@ export const score_SUBSCRIBE = () => (dispatch, getState) => {
     }));
 
     ScoreDB.changes({
-        selector: {
-            $or: [
-                { userId: currentUser.id, competitorUserId: competitorUserId, },
-                { userId: competitorUserId, competitorUserId: currentUser.id, },
-            ],
-        },
+        selector: selector,
         live: true,
         include_docs: true,
     }).on('change', ({ doc }) => {

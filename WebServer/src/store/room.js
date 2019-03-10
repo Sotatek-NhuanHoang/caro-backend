@@ -2,7 +2,6 @@ import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
 import RoomApi from 'caro-api/RoomApi';
 import { user_UPDATE_STATE } from './user';
-import { match_RESET } from './match';
 import { createSelector } from 'reselect';
 import _ from 'lodash';
 import RoomStatus from 'caro-shared-resource/RoomStatus';
@@ -160,9 +159,6 @@ export const room_JOIN_ROOM = (roomId) => async (dispatch) => {
             currentRoomId: joinedRoom._id,
             joiningRoom: false,
         }));
-        dispatch(match_RESET({
-            firstMoveUserId: creatorUser._id,
-        }));
     } catch (error) {
         dispatch(room_UPDATE_STATE({
             joiningRoom: false,
@@ -187,7 +183,6 @@ export const room_OUT_ROOM = () => (dispatch, getState) => {
     dispatch(room_UPDATE_STATE({
         currentRoomId: null,
     }));
-    dispatch(match_RESET());
 
     socket.emit(SocketClientEvents.room_EXIT, {
         roomId: currentRoomId,

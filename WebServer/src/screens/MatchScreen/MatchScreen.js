@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { showConfirmAlert } from 'caro-service/AlertService';
 import { showSpinner, hideSpinner } from 'caro-service/SpinnerService';
 import { roomSelector, room_OUT_ROOM, competitorUserIdSelector } from 'caro-store/room';
-import { match_READY_NEW_GAME, match_REMATCH } from 'caro-store/match';
+import { match_READY_NEW_GAME, match_REMATCH, match_SUBSCRIBE } from 'caro-store/match';
 import { score_SUBSCRIBE, score_UNSUBSCRIBE } from 'caro-store/score';
 import { showInfo } from 'caro-service/AlertService';
 import CaroBoard from './CaroBoard';
@@ -22,8 +22,10 @@ class MatchScreen extends PureComponent {
         }
 
         if (this.props.competitorUserId) {
-            this.props._subscribe();
+            this.props._subscribeScore();
         }
+
+        this.props._subscribeMatch();
     }
 
     componentDidMount() {
@@ -36,7 +38,7 @@ class MatchScreen extends PureComponent {
             history,
             winnerId,
             currentUser,
-            currentUserReadyNewGame,
+            creatorUserReadyNewGame,
             competitorUserReadyNewGame,
             competitorUserId,
             room,
@@ -51,7 +53,7 @@ class MatchScreen extends PureComponent {
         }
 
         if (!prevProps.competitorUserId && competitorUserId) {
-            this.props._subscribe();
+            this.props._subscribeScore();
         }
 
         if (!prevProps.winnerId && winnerId) {
@@ -71,18 +73,18 @@ class MatchScreen extends PureComponent {
             });
         }
 
-        if (!prevProps.currentUserReadyNewGame && currentUserReadyNewGame) {
+        if (!prevProps.creatorUserReadyNewGame && creatorUserReadyNewGame) {
             showSpinner();
         }
 
-        if (prevProps.currentUserReadyNewGame && !currentUserReadyNewGame) {
+        if (prevProps.creatorUserReadyNewGame && !creatorUserReadyNewGame) {
             hideSpinner();
         }
 
         if (
-            currentUserReadyNewGame &&
+            creatorUserReadyNewGame &&
             competitorUserReadyNewGame &&
-            (!prevProps.currentUserReadyNewGame || !prevProps.competitorUserReadyNewGame)
+            (!prevProps.creatorUserReadyNewGame || !prevProps.competitorUserReadyNewGame)
         ) {
             _reMatch();
             showInfo('Start new match');
@@ -91,7 +93,7 @@ class MatchScreen extends PureComponent {
 
     componentWillUnmount() {
         window.removeEventListener('popstate', this.onBackButtonPressed);
-        this.props._unsubscribe();
+        this.props._unsubscribeScore();
     }
 
     onBackButtonPressed = () => {
@@ -138,7 +140,7 @@ const mapStateToProps = ({ room, user, match }) => ({
     room: roomSelector(room, room.currentRoomId),
     currentUser: user.currentUser,
     winnerId: match.winnerId,
-    currentUserReadyNewGame: match.currentUserReadyNewGame,
+    creatorUserReadyNewGame: match.creatorUserReadyNewGame,
     competitorUserReadyNewGame: match.competitorUserReadyNewGame,
 });
 
@@ -152,10 +154,16 @@ const mapDispatchToProps = (dispatch) => ({
     _exitRoom: () => {
         return dispatch(room_OUT_ROOM());
     },
-    _subscribe: () => {
+    _subscribeScore: () => {
         dispatch(score_SUBSCRIBE());
     },
-    _unsubscribe: () => {
+    _unsubscribeScore: () => {
+        dispatch(score_UNSUBSCRIBE());
+    },
+    _subscribeMatch: () => {
+        dispatch(match_SUBSCRIBE());
+    },
+    _unsubscribeMatch: () => {
         dispatch(score_UNSUBSCRIBE());
     },
 });

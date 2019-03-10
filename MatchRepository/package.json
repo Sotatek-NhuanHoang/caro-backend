@@ -1,0 +1,21 @@
+{
+  "name": "user-repository",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-dev": "node-dev index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "caro-database": "./database",
+    "caro-shared-resource": "../SharedResource",
+    "dotenv": "6.2.0",
+    "pouchdb": "7.0.0",
+    "pouchdb-find": "7.0.0",
+    "seneca": "3.8.4",
+    "seneca-amqp-transport": "2.2.0"
+  }
+}

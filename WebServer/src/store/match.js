@@ -1,14 +1,16 @@
 import { handleActions, createAction } from 'redux-actions';
 import { fromJS } from 'immutable';
 import { createSelector } from 'reselect';
-import sleep from 'sleep-promise';
+// import sleep from 'sleep-promise';
 import _ from 'lodash';
 
 import Config from 'caro-config';
-import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
-import socket from 'caro-socket';
+import MatchStatusDB from 'caro-database/MatchStatusDB';
+import MatchSquareDB from 'caro-database/MatchSquareDB';
 import { showError } from 'caro-service/AlertService';
-import { score_INCREASE_SCORE } from './score';
+// import { score_INCREASE_SCORE } from './score';
+import { competitorUserIdSelector } from './room';
+import { getSync, getChanges } from 'caro-database';
 
 
 
@@ -19,15 +21,22 @@ import { score_INCREASE_SCORE } from './score';
  */
 
 const defaultState = {
+    // MatchStatusDB
     firstMoveUserId: null,
     winnerId: null,
-    isCurentUserTurn: false,
+    isCreatorUserTurn: false,
+    isCompetitorUserTurn: false,
+    creatorUserReadyNewGame: false,
+    competitorUserReadyNewGame: false,
+    
+    // MatchSquareDB
     squares: {},
-    lastSquareIndex: '',
     winningSquares: {},
 
-    currentUserReadyNewGame: false,
-    competitorUserReadyNewGame: false,
+    lastSquareIndex: '',
+
+    statusSync: null,
+    squareSync: null,
 };
 
 
@@ -206,9 +215,75 @@ export const match_RESET = createAction('match_RESET');
 
 export const match_UPDATE_STATE = createAction('match_UPDATE_STATE');
 
+export const match_SUBSCRIBE = () => (dispatch, getState) => {
+    const { room, match } = getState();
+    const { statusSync, squareSync } = match;
+
+    if (!room.currentRoomId) {
+        return;
+    }
+
+    if (statusSync) {
+        statusSync.cancel();
+    }
+
+    if (squareSync) {
+        squareSync.cancel();
+    }
+
+    const selector = {
+        roomId: room.currentRoomId,
+    };
+
+    const newStatusSync = getSync(MatchStatusDB, selector);
+    getChanges(MatchStatusDB, selector, ({ doc }) => {
+        if (doc._deleted) {
+            return;
+        }
+
+        dispatch(match_UPDATE_STATE({
+            firstMoveUserId: doc.firstMoveUserId,
+            winnerId: doc.winnerId,
+            
+            isCreatorUserTurn: doc.isCreatorUserTurn,
+            isCompetitorUserTurn: doc.isCompetitorUserTurn,
+
+            creatorUserReadyNewGame: doc.creatorUserReadyNewGame,
+            competitorUserReadyNewGame: doc.competitorUserReadyNewGame,
+        }));
+    });
+    dispatch(match_UPDATE_STATE({
+        statusSync: newStatusSync,
+    }));
+
+    const newSquareSync = getSync(MatchSquareDB, selector);
+    getChanges(MatchSquareDB, selector, ({ doc }) => {
+        if (doc._deleted) {
+            return;
+        }
+
+        const { row, column, type, isWinningSquare } = doc;
+        const squareIndex = row + ',' + column;
+
+        dispatch(match_UPDATE_STATE({
+            squares: {
+                [squareIndex]: type,
+            },
+            winningSquares: {
+                [squareIndex]: isWinningSquare,
+            },
+        }));
+    });
+    dispatch(match_UPDATE_STATE({
+        squareSync: newSquareSync,
+    }));
+};
+
+
 export const match_STROKE = (row, column) => async (dispatch, getState) => {
-    const { match, user, room } = getState();
-    const { isCurentUserTurn, squares, firstMoveUserId } = match;
+    const { room, match, user } = getState();
+    const { squares, firstMoveUserId } = match;
+    const isCurentUserTurn = isCurentUserTurnSelectror(room, user, match);
 
     if (!firstMoveUserId) {
         showError('Waiting user ...');
@@ -226,66 +301,70 @@ export const match_STROKE = (row, column) => async (dispatch, getState) => {
         return;
     }
 
-    const { currentUser } = user;
-    const squareType = (currentUser.id === firstMoveUserId) ? Config.FIRST_MOVE_SQUARE_TYPE : Config.SECOND_MOVE_SQUARE_TYPE;
-    const currentRoom = room.rooms[room.currentRoomId];
-    const competitorUserId = currentRoom.creatorUserId === currentUser.id ? currentRoom.competitorUserId : currentRoom.creatorUserId;
-
     dispatch(match_UPDATE_STATE({
-        isCurentUserTurn: false,
-        squares: {
-            [squareIndex]: squareType,
-        },
-        lastSquareIndex: squareIndex,
+        isCreatorUserTurn: false,
+        isCompetitorUserTurn: false,
     }));
 
-    socket.emit(SocketClientEvents.match_STROKE, {
-        roomId: currentRoom.id,
-        row: row,
-        column: column,
-        competitorUserId: competitorUserId,
-        userId: currentUser.id,
-    });
+    const { currentUser } = user;
+    const squareType = (currentUser.id === firstMoveUserId) ? Config.FIRST_MOVE_SQUARE_TYPE : Config.SECOND_MOVE_SQUARE_TYPE;
 
-    const { match: nextMatch } = getState();
-    const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
+    try {
+        const currentRoom = room.rooms[room.currentRoomId];
 
-    if (winningSquares) {
-        dispatch(score_INCREASE_SCORE());
-        dispatch(match_UPDATE_STATE({
-            winningSquares: winningSquares,
-        }));
+        const [{docs: matchStatusDocs}] = await Promise.all([
+            MatchStatusDB.find({
+                selector: {
+                    roomId: room.currentRoomId,
+                },
+            }),
+            MatchSquareDB.post({
+                roomId: room.currentRoomId,
+                row: row,
+                column: column,
+                type: squareType,
+                isWinningSquare: false,
+            }),
+        ]);
 
-        await sleep(1500);
-        dispatch(match_UPDATE_STATE({
-            winnerId: currentUser.id,
-        }));
+        const matchStatusDoc = matchStatusDocs[0];
+
+        if (currentUser.id === currentRoom.creatorUserId) {
+            await MatchStatusDB.put({
+                ...matchStatusDoc,
+                isCreatorUserTurn: false,
+                isCompetitorUserTurn: true,
+            });
+        } else {
+            await MatchStatusDB.put({
+                ...matchStatusDoc,
+                isCreatorUserTurn: true,
+                isCompetitorUserTurn: false,
+            });
+        }
+    } catch (error) {
+        console.log(error)
     }
+
+
+    // const { match: nextMatch } = getState();
+    // const winningSquares = checkWinningMatchFromIndex(nextMatch.squares, row, column);
+
+    // if (winningSquares) {
+    //     dispatch(score_INCREASE_SCORE());
+    //     dispatch(match_UPDATE_STATE({
+    //         winningSquares: winningSquares,
+    //     }));
+
+    //     await sleep(1500);
+    //     dispatch(match_UPDATE_STATE({
+    //         winnerId: currentUser.id,
+    //     }));
+    // }
 };
 
 export const match_READY_NEW_GAME = () => (dispatch, getState) => {
-    const { user, room, match } = getState();
-    const { currentUser } = user;
-
-    if (!match.winnerId) {
-        return;
-    }
-
-    const currentRoom = room.rooms[room.currentRoomId];
-    const competitorUserId = (currentRoom.creatorUserId === currentUser.id) ? currentRoom.competitorUserId : currentRoom.creatorUserId;
-
-    if (!currentRoom.competitorUserId) {
-        return;
-    }
     
-    dispatch(match_UPDATE_STATE({
-        currentUserReadyNewGame: true,
-    }));
-    
-    socket.emit(SocketClientEvents.match_READY_NEW_GAME, {
-        roomId: currentRoom.id,
-        competitorUserId: competitorUserId,
-    });
 };
 
 export const match_REMATCH = () => (dispatch, getState) => {
@@ -347,6 +426,27 @@ export const winningSquareSelector = createSelector(
     ({ winningSquares, row, column }) => {
         const squareIndex = row + ',' + column;
         return winningSquares[squareIndex] || false;
+    }
+);
+
+export const isCurentUserTurnSelectror = createSelector(
+    (room, user, match) => ({
+        room: room,
+        user: user,
+        match: match,
+    }),
+    ({ room, user, match }) => {
+        const currentRoom = room.rooms[room.currentRoomId];
+
+        if (!currentRoom) {
+            return false;
+        }
+
+        if (currentRoom.creatorUserId === user.currentUser.id) {
+            return match.isCreatorUserTurn;
+        } else {
+            return match.isCompetitorUserTurn;
+        }
     }
 );
 

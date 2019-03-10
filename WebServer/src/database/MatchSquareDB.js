@@ -1,6 +1,6 @@
 import createDb from './index';
 
-const db = createDb('scoredb');
+const db = createDb('matchsquaredb');
 
 
 export default db;

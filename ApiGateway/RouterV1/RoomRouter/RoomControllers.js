@@ -2,6 +2,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const RoomClient = require('caro-repository-client/RoomClient');
 const UserClient = require('caro-repository-client/UserClient');
+const MatchClient = require('caro-repository-client/MatchClient');
 const SocketClient = require('caro-repository-client/SocketClient');
 const SocketServerEvents = require('caro-shared-resource/SocketServerEvents');
 
@@ -9,8 +10,14 @@ const SocketServerEvents = require('caro-shared-resource/SocketServerEvents');
 const RoomControllers = {
     createRoom: async (req, reply) => {
         try {
-            const newRoom = await RoomClient.call('createRoom', { userId: req.user._id });
-            const creatorUser = await UserClient.call('getUserById', { userId: req.user._id, });
+            const [newRoom, creatorUser] = await Promise.all([
+                RoomClient.call('createRoom', { userId: req.user._id }),
+                UserClient.call('getUserById', { userId: req.user._id, })
+            ])
+
+            await MatchClient.call('createMatch', {
+                roomId: newRoom._id,
+            });
 
             reply.status(200).send(newRoom);
 
@@ -33,7 +40,12 @@ const RoomControllers = {
             const joinedRoom = await RoomClient.call('joinRoom', { roomId: roomId, userId: req.user._id });
             const [creatorUser, joinedUser] = await Promise.all([
                 UserClient.call('getUserById', { userId: joinedRoom.creatorUserId, }),
-                UserClient.call('getUserById', { userId: req.user._id, })
+                UserClient.call('getUserById', { userId: req.user._id, }),
+                MatchClient.call('updateMatchStatus', {
+                    roomId: roomId,
+                    firstMoveUserId: joinedRoom.creatorUserId,
+                    isCreatorUserTurn: true,
+                }),
             ]);
 
             reply.status(200).send({

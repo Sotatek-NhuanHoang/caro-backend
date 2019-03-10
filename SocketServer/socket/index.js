@@ -5,7 +5,6 @@ const socketMiddleware = require('socketio-wildcard');
 const combineHandlers = require('./combineHandlers');
 const RoomHandler = require('./RoomHandler');
 const UserHandler = require('./UserHandler');
-const MatchHandler = require('./MatchHandler');
 
 const SocketClientEvents = require('caro-shared-resource/SocketClientEvents');
 
@@ -23,7 +22,6 @@ app.listen(process.env.PORT || 8083);
 const eventHandler = combineHandlers([
     RoomHandler,
     UserHandler,
-    MatchHandler,
 ]);
 
 io.use(socketMiddleware());

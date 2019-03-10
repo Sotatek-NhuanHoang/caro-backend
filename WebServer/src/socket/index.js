@@ -7,8 +7,6 @@ import SocketClientEvents from 'caro-shared-resource/SocketClientEvents';
 import combineHandlers from './combineHandlers';
 import UserHandler from './UserHandler';
 import RoomHandler from './RoomHandler';
-import MatchHandler from './MatchHandler';
-import ScoreHandler from './ScoreHandler';
 import { getState } from 'caro-store';
 
 
@@ -18,8 +16,6 @@ socketWildcard(io.Manager)(socket);
 const eventHandler = combineHandlers([
     UserHandler,
     RoomHandler,
-    MatchHandler,
-    ScoreHandler
 ]);
 
 

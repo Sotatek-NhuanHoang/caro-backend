@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { isCurentUserTurnSelectror } from 'caro-store/match';
 import UserScore from './UserScore';
 import './CurrentUser.scss';
 
@@ -34,9 +35,9 @@ class CurrentUser extends PureComponent {
 }
 
 
-const mapStateToProps = ({ user, match }) => ({
+const mapStateToProps = ({ room, user, match }) => ({
     currentUser: user.currentUser,
-    isCurentUserTurn: match.isCurentUserTurn,
+    isCurentUserTurn: isCurentUserTurnSelectror(room, user, match),
 });
 
 const mapDispatchToProps = (dispatch) => ({

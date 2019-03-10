@@ -21,7 +21,9 @@
     "normalize.css": "8.0.1",
     "noty": "3.2.0-beta",
     "pouchdb": "7.0.0",
+    "pouchdb-adapter-memory": "7.0.0",
     "pouchdb-find": "7.0.0",
+    "pouchdb-promise": "^6.4.3",
     "react": "16.8.3",
     "react-confirm-alert": "2.3.0",
     "react-dom": "16.8.3",
@@ -36,6 +38,7 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "sleep-promise": "8.0.1",
+    "socket-pouch": "https://github.com/nhuanhoangduc/socket-pouch",
     "socket.io-client": "2.2.0",
     "socketio-wildcard": "2.0.0",
     "spectre.css": "0.5.8"

@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { otherUserSelector } from 'caro-store/user';
+import { isCurentUserTurnSelectror } from 'caro-store/match';
 import { showInfo } from 'caro-service/AlertService';
 import UserScore from './UserScore';
 
@@ -53,9 +54,9 @@ class CompetitorUser extends PureComponent {
 }
 
 
-const mapStateToProps = ({ user, match }, ownProps) => ({
+const mapStateToProps = ({ room, user, match }, ownProps) => ({
     competitorUser: otherUserSelector(user, ownProps.competitorUserId),
-    isCurentUserTurn: match.isCurentUserTurn,
+    isCurentUserTurn: isCurentUserTurnSelectror(room, user, match),
 });
 
 const mapDispatchToProps = (dispatch) => ({
