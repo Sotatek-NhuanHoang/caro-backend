@@ -8,6 +8,10 @@
         width: 25%;
         height: auto;
         border-radius: 20%;
+
+        @media only screen and (max-device-width : 1024px) {
+            width: 20%;
+        }
     }
 
     > .user-name {

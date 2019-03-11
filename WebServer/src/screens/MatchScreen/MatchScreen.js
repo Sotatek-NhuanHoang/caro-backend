@@ -103,7 +103,9 @@ class MatchScreen extends PureComponent {
 
         return (
             <div id="match-screen">
-                <CaroBoard />
+                <div className="caro-board-container">
+                    <CaroBoard />
+                </div>
 
                 {/* Users info */}
                 <div className="user-container">
